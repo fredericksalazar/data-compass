@@ -1,16 +1,21 @@
 import os
-import firebase_admin
-from firebase_admin import credentials
-from .config import settings
+import sys
 
-firebase_path = os.path.join(os.path.dirname(__file__), "..", "..", settings.firebase_credentials_path)
+try:
+    import firebase_admin
+    from firebase_admin import credentials
+    from .config import settings
 
-if os.path.exists(firebase_path):
-    cred = credentials.Certificate(firebase_path)
-    firebase_admin.initialize_app(cred)
-else:
-    firebase_admin.initialize_app(credentials.Certificate({"type": "service_account", "project_id": "dummy"}))
+    firebase_path = os.path.join(os.path.dirname(__file__), "..", "..", settings.firebase_credentials_path)
 
-from firebase_admin import firestore
-
-db = firestore.client()
+    if os.path.exists(firebase_path):
+        cred = credentials.Certificate(firebase_path)
+        firebase_admin.initialize_app(cred)
+        from firebase_admin import firestore
+        db = firestore.client()
+    else:
+        print(f"Warning: Firebase credentials not found at {firebase_path}", file=sys.stderr)
+        db = None
+except Exception as e:
+    print(f"Warning: Firebase initialization skipped: {e}", file=sys.stderr)
+    db = None

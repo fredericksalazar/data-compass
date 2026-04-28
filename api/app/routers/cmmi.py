@@ -70,19 +70,24 @@ async def calculate_cmmi_assessment(submission: AssessmentSubmission):
     
     overall_score = round(total_domain_scores_sum / 5, 2)
     
-    doc_ref = db.collection("assessments").document()
-    doc_data = {
-        "lead": submission.lead.model_dump(),
-        "answers": [a.model_dump() for a in submission.answers],
-        "scores": {
-            "overall_score": overall_score,
-            "domain_scores": [ds.model_dump() for ds in results_domain_scores]
-        },
-        "created_at": datetime.now(timezone.utc)
-    }
-    doc_ref.set(doc_data)
+    assessment_id = f"local-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
     
-    assessment_id = doc_ref.id
+    if db:
+        try:
+            doc_ref = db.collection("assessments").document()
+            doc_data = {
+                "lead": submission.lead.model_dump(),
+                "answers": [a.model_dump() for a in submission.answers],
+                "scores": {
+                    "overall_score": overall_score,
+                    "domain_scores": [ds.model_dump() for ds in results_domain_scores]
+                },
+                "created_at": datetime.now(timezone.utc)
+            }
+            doc_ref.set(doc_data)
+            assessment_id = doc_ref.id
+        except Exception as e:
+            print(f"Firestore save failed: {e}")
     
     return AssessmentResult(
         assessment_id=assessment_id,
