@@ -51,11 +51,9 @@ function getLevelNumber(score: number): number {
 }
 
 function getLevelColor(score: number): string {
-  if (score < 2) return '#ef4444';
-  if (score < 3) return '#f97316';
-  if (score < 4) return '#eab308';
-  if (score < 4.5) return '#22c55e';
-  return '#06b6d4';
+  if (score < 2.5) return '#ef4444';   // rojo  — crítico
+  if (score < 3.5) return '#f97316';   // naranja — medio
+  return '#22c55e';                     // verde  — bueno
 }
 
 function formatDate(date: Date): string {
@@ -88,15 +86,16 @@ export default function ResultDashboard({ result }: ResultDashboardProps) {
       {
         label: 'Puntuación',
         data: result.domain_scores.map(d => d.score),
-        backgroundColor: 'rgba(96, 165, 250, 0.12)',
+        backgroundColor: 'rgba(96, 165, 250, 0.08)',
         borderColor: '#60a5fa',
         borderWidth: 2,
-        pointBackgroundColor: '#60a5fa',
-        pointBorderColor: '#1e293b',
+        pointBackgroundColor: result.domain_scores.map(d => getLevelColor(d.score)),
+        pointBorderColor: '#0f172a',
         pointBorderWidth: 2,
-        pointRadius: 5,
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#60a5fa',
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: result.domain_scores.map(d => getLevelColor(d.score)),
+        pointHoverBorderColor: '#fff',
       },
     ],
   };
@@ -220,7 +219,7 @@ export default function ResultDashboard({ result }: ResultDashboardProps) {
                 {result.domain_scores.map(d => (
                   <div key={d.domain_name} className="flex items-center gap-3">
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-slate-400 truncate mb-1">{d.domain_name}</p>
+                      <p className="text-xs truncate mb-1" style={{ color: getLevelColor(d.score) }}>{d.domain_name}</p>
                       <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-700"
@@ -228,7 +227,7 @@ export default function ResultDashboard({ result }: ResultDashboardProps) {
                         />
                       </div>
                     </div>
-                    <span className="text-xs font-semibold text-slate-300 w-6 text-right">{d.score.toFixed(1)}</span>
+                    <span className="text-xs font-semibold w-6 text-right" style={{ color: getLevelColor(d.score) }}>{d.score.toFixed(1)}</span>
                   </div>
                 ))}
               </div>
