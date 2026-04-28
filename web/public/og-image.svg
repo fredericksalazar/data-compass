@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="1050" cy="120" r="180" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.15"/>
+  <circle cx="1050" cy="120" r="120" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.1"/>
+  <circle cx="150" cy="510" r="140" fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.1"/>
+
+  <!-- Accent bar -->
+  <rect x="80" y="200" width="6" height="80" fill="url(#accent)" rx="3"/>
+
+  <!-- Title -->
+  <text x="110" y="258" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="700" fill="#f8fafc">DataCompass</text>
+
+  <!-- Subtitle -->
+  <text x="110" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#94a3b8">Evaluación CMMI de Gobernanza de Datos</text>
+
+  <!-- Description -->
+  <text x="110" y="390" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#64748b">Data strategy · Data architecture audit · Startup data consulting</text>
+
+  <!-- Bottom badge -->
+  <rect x="110" y="460" width="240" height="48" rx="24" fill="#1d4ed8" opacity="0.8"/>
+  <text x="230" y="491" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#f8fafc" text-anchor="middle">100% Gratuito</text>
+
+  <!-- URL -->
+  <text x="1120" y="590" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#475569" text-anchor="end">datacompass.app</text>
+</svg>

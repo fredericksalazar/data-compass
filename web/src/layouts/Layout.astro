@@ -13,7 +13,7 @@ const {
   title,
   description = 'Evalúa la madurez de tu gobernanza de datos con DataCompass. Modelo CMMI, diagnóstico ejecutivo y hoja de ruta estratégica.',
   bodyClass = 'bg-slate-50',
-  image = '/og-image.png'
+  image = '/og-image.svg'
 } = Astro.props;
 ---
 
@@ -23,8 +23,11 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
-    
+
     <SEO title={title} description={description} image={image} />
 
     <!-- Google Analytics -->
@@ -39,9 +42,27 @@ const {
     <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.google-analytics.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   </head>
   <body class={`font-sans min-h-screen ${bodyClass}`}>
     <slot />
+
+    <!-- JSON-LD Schema: WebSite -->
+    <script type="application/ld+json" is:inline>
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "DataCompass",
+      "url": "https://datacompass.app",
+      "inLanguage": "es",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://datacompass.app/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
     <!-- JSON-LD Schema: Organization -->
     <script type="application/ld+json" is:inline>

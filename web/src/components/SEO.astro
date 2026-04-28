@@ -10,7 +10,7 @@ interface Props {
 const {
   title,
   description = 'Evalúa la madurez de tu gobernanza de datos con DataCompass. Modelo CMMI, diagnóstico ejecutivo y hoja de ruta estratégica.',
-  image = '/og-image.png',
+  image = '/og-image.svg',
   canonicalURL = new URL(Astro.url.pathname, Astro.site),
   keywords = 'data strategy, data architecture audit, startup data consulting, gobernanza de datos, CMMI, evaluación de datos, madurez de datos'
 } = Astro.props;
@@ -59,7 +59,7 @@ const fullCanonicalURL = new URL(canonicalURL.pathname, siteURL);
   "name": "DataCompass",
   "description": "Herramienta de evaluación de madurez en gobernanza de datos basada en el modelo CMMI para startups y empresas",
   "url": "https://datacompass.app",
-  "image": "https://datacompass.app/og-image.png",
+  "image": "https://datacompass.app/og-image.svg",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web-based",
   "offers": {
@@ -67,11 +67,6 @@ const fullCanonicalURL = new URL(canonicalURL.pathname, siteURL);
     "price": "0",
     "priceCurrency": "USD",
     "availability": "https://schema.org/InStock"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "ratingCount": "124"
   },
   "author": {
     "@type": "Organization",
@@ -88,7 +83,7 @@ const fullCanonicalURL = new URL(canonicalURL.pathname, siteURL);
     "Hoja de ruta estratégica personalizada",
     "Análisis Startup data consulting"
   ],
-  "screenshot": "https://datacompass.app/og-image.png",
+  "screenshot": "https://datacompass.app/og-image.svg",
   "releaseNotes": "Versión 1.0 con evaluación completa"
 }
 </script>
