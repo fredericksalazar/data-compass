@@ -32,3 +32,9 @@ Este documento es la fuente de verdad para cualquier componente visual creado en
 * **Zero Friction:** Los formularios deben ser de un solo clic donde sea posible. En el cuestionario, hacer clic en toda la tarjeta de la opción debe seleccionarla (no obligar a hacer clic en un pequeño radio button).
 * **Feedback Visual:** Todo elemento interactivo debe tener una transición suave (`transition-all duration-200`).
 * **Layout Mínimo B2B:** Evita distracciones. El Header solo debe tener el logo, sin menús complejos durante el flujo de evaluación.
+
+### NUEVA SECCIÓN: Estilos Premium Hero Zone
+
+* **Fondo Hero (Tecnológico):** Usar un fondo oscuro profundo (`bg-slate-950`) o blanco puro (`bg-white`) CON un patrón de cuadrícula sutil (`background-image: dot-pattern`) y una animación de partículas JS/CSS interactiva (nodos y conexiones).
+* **Degradado de Texto (H1):** `bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-500 to-violet-500`.
+* **Botón Hero Premium (Glow):** Mantener `bg-blue-600` pero añadir un sutil *shadow glow* azul (`shadow-[0\_0\_30px\_-5px\_rgba(37,99,235,0.5)]`).

@@ -2,22 +2,625 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="DataCompass - Evaluación de Madurez en Gobernanza de Datos">
-  <main class="min-h-screen flex flex-col items-center justify-center px-4 py-16">
-    <div class="max-w-3xl text-center">
-      <h1 class="text-3xl font-bold tracking-tight text-slate-900 mb-6">
-        Governance de Datos para tu Organización
-      </h1>
-      <p class="text-base text-slate-600 leading-relaxed mb-8">
-        Evalúa la madurez de tu gobernanza de datos con nuestra herramienta profesional. 
-        Obtén insights accionables para mejorar la calidad y gestión de tus datos corporativos.
-      </p>
-      <a 
-        href="/evaluacion"
-        class="inline-flex justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-      >
-        Iniciar Evaluación Gratuita
+<Layout title="DataCompass — Evaluación de Madurez en Gobernanza de Datos" bodyClass="bg-slate-950">
+
+  <style is:global>
+    html { scroll-behavior: smooth; }
+
+    #navbar.scrolled {
+      background-color: rgb(2 6 23 / 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgb(30 41 59);
+      box-shadow: 0 4px 24px rgb(0 0 0 / 0.4);
+    }
+
+    #hero-canvas { display: block; }
+
+    @keyframes bounce-gentle {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(7px); }
+    }
+    #scroll-hint { transition: opacity 0.5s; }
+    #scroll-hint.hidden-hint { opacity: 0; pointer-events: none; }
+    #scroll-hint svg { animation: bounce-gentle 1.8s ease-in-out infinite; }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+    .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+  </style>
+
+  <!-- ═══════════════════════════════════════════════
+       NAVIGATION
+  ════════════════════════════════════════════════ -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2.5">
+        <svg class="h-7 w-7 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="3" x2="12" y2="21"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <polyline points="16.5 7.5 12 12 7.5 16.5" stroke-width="2"/>
+        </svg>
+        <span class="text-xl font-bold text-white tracking-tight">Data<span class="text-blue-400">Compass</span></span>
+      </a>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#como-funciona" class="text-sm text-slate-300 hover:text-white transition-colors">Cómo funciona</a>
+        <a href="#dominios"      class="text-sm text-slate-300 hover:text-white transition-colors">Dominios</a>
+        <a href="/evaluacion"
+           class="inline-flex justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors">
+          Iniciar Evaluación
+        </a>
+      </div>
+
+      <!-- Mobile CTA -->
+      <a href="/evaluacion"
+         class="md:hidden inline-flex justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
+        Evaluar
       </a>
     </div>
-  </main>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════
+       HERO — DARK + 3D CANVAS
+  ════════════════════════════════════════════════ -->
+  <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-950">
+    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full"></canvas>
+
+    <!-- Radial vignette overlay -->
+    <div class="absolute inset-0 bg-radial-[at_50%_50%] from-transparent via-transparent to-slate-950/80 pointer-events-none"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto pt-16">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-300 mb-8">
+        <span class="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+        Evaluación CMMI &middot; Gobernanza de Datos
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white leading-tight mb-6">
+        Descubre el nivel real de<br>
+        <span class="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+          madurez de tus datos
+        </span>
+      </h1>
+
+      <!-- Subline -->
+      <p class="text-lg md:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto mb-10">
+        DataCompass evalúa tu organización según el modelo CMMI en 5 dominios críticos
+        de gobernanza. En menos de 10 minutos obtienes un diagnóstico ejecutivo con tu
+        hoja de ruta de mejora.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/evaluacion"
+           class="inline-flex justify-center rounded-md bg-blue-600 px-7 py-3 text-base font-semibold text-white shadow-lg hover:bg-blue-700 transition-colors">
+          Iniciar Evaluación Gratuita &rarr;
+        </a>
+        <a href="#como-funciona"
+           class="inline-flex justify-center rounded-md border border-slate-600 bg-slate-800/50 px-7 py-3 text-base font-semibold text-slate-200 hover:bg-slate-700/50 transition-colors">
+          Ver cómo funciona
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div id="scroll-hint" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500">
+      <span class="text-xs tracking-widest uppercase">Explorar</span>
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M6 9l6 6 6-6"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       STATS STRIP
+  ════════════════════════════════════════════════ -->
+  <section class="bg-white border-y border-slate-200 py-12">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div>
+        <div class="text-4xl font-bold text-blue-600 mb-1">25</div>
+        <div class="text-sm text-slate-600">Preguntas estructuradas</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-blue-600 mb-1">5</div>
+        <div class="text-sm text-slate-600">Dominios CMMI evaluados</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-blue-600 mb-1">&lt;10</div>
+        <div class="text-sm text-slate-600">Minutos de respuesta</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-blue-600 mb-1">100%</div>
+        <div class="text-sm text-slate-600">Gratuito y sin compromiso</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       PROBLEMA
+  ════════════════════════════════════════════════ -->
+  <section class="py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <div class="inline-block rounded-full bg-amber-100 px-4 py-1.5 text-sm font-medium text-amber-700 mb-6">
+          El problema
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+          ¿Sabes realmente cómo gestiona<br class="hidden md:block">
+          tu organización sus datos?
+        </h2>
+        <p class="text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
+          La mayoría de las organizaciones creen tener el control de sus datos, pero sin un
+          diagnóstico estructurado es imposible identificar los riesgos ocultos, los silos
+          de información y las brechas de madurez que frenan la toma de decisiones basada en datos.
+        </p>
+      </div>
+
+      <!-- Pain point cards -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8">
+          <div class="h-12 w-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center mb-6">
+            <svg class="h-6 w-6 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-slate-900 mb-3">Sin visibilidad</h3>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            No sabes qué datos tienes, dónde están, ni quién es el responsable de ellos.
+            Los activos de datos permanecen invisibles e incontrolados.
+          </p>
+        </div>
+        <!-- Card 2 -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8">
+          <div class="h-12 w-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center mb-6">
+            <svg class="h-6 w-6 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-slate-900 mb-3">Decisiones sin datos</h3>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            Los equipos operan con intuición en lugar de información fiable y gobernada.
+            La calidad del dato nunca está garantizada.
+          </p>
+        </div>
+        <!-- Card 3 -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8">
+          <div class="h-12 w-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center mb-6">
+            <svg class="h-6 w-6 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-slate-900 mb-3">Riesgos regulatorios</h3>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            La falta de control sobre datos sensibles expone a la organización a multas,
+            auditorías y pérdida reputacional frente a clientes y reguladores.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       VALUE PROPOSITIONS
+  ════════════════════════════════════════════════ -->
+  <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <div class="inline-block rounded-full bg-blue-100 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
+          Lo que obtienes
+        </div>
+        <h2 class="text-4xl font-bold text-slate-900 mb-4">
+          Una solución completa de diagnóstico
+        </h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          DataCompass no solo te da una puntuación, sino un plan de acción concreto y
+          priorizado para mejorar tu madurez en gobernanza de datos.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8 hover:shadow-md hover:border-blue-200 transition-all duration-200">
+          <div class="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+            <svg class="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">Diagnóstico CMMI</h3>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            Evaluación de madurez en 5 dimensiones clave basada en el modelo CMMI, con
+            puntuación por dominio de 1 a 5 y visualización radar comparativa.
+          </p>
+        </div>
+        <!-- Card 2 -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8 hover:shadow-md hover:border-blue-200 transition-all duration-200">
+          <div class="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+            <svg class="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">Informe Ejecutivo</h3>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            Informe personalizado con tu nivel de madurez actual, análisis por dominio
+            y narrativa ejecutiva lista para presentar a dirección o consejo.
+          </p>
+        </div>
+        <!-- Card 3 -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8 hover:shadow-md hover:border-blue-200 transition-all duration-200">
+          <div class="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+            <svg class="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6" stroke-width="2"/>
+              <line x1="3" y1="12" x2="3.01" y2="12" stroke-width="2"/>
+              <line x1="3" y1="18" x2="3.01" y2="18" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">Plan de Acción</h3>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            Hoja de ruta concreta con iniciativas priorizadas según impacto y esfuerzo
+            para cada uno de los dominios CMMI evaluados en tu organización.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       CÓMO FUNCIONA
+  ════════════════════════════════════════════════ -->
+  <section id="como-funciona" class="py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <div class="inline-block rounded-full bg-blue-100 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
+          El proceso
+        </div>
+        <h2 class="text-4xl font-bold text-slate-900 mb-4">
+          En 3 pasos, de la incertidumbre al plan de acción
+        </h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          Diseñado para responsables de datos y directivos: sin tecnicismos,
+          sin configuraciones complejas.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <!-- Step 1 -->
+        <div class="text-center">
+          <div class="h-14 w-14 rounded-full bg-blue-600 text-white text-xl font-bold flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-600/30">
+            1
+          </div>
+          <h3 class="text-lg font-semibold text-slate-900 mb-3">Registra tu empresa</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Introduce los datos de tu organización y el perfil del responsable de datos.
+            Solo se acepta correo corporativo para garantizar la calidad del análisis.
+          </p>
+        </div>
+
+        <!-- Connector -->
+        <div class="hidden md:flex items-start justify-center pt-7">
+          <div class="w-full border-t-2 border-dashed border-slate-300 mt-0"></div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="text-center">
+          <div class="h-14 w-14 rounded-full bg-blue-600 text-white text-xl font-bold flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-600/30">
+            2
+          </div>
+          <h3 class="text-lg font-semibold text-slate-900 mb-3">Responde el cuestionario</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            25 preguntas estructuradas en 5 dominios CMMI. Cada respuesta refleja el nivel
+            real de madurez de tu organización en la gestión de datos.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 3 below, centered -->
+      <div class="mt-8 flex justify-center">
+        <div class="text-center max-w-xs">
+          <div class="h-14 w-14 rounded-full bg-blue-600 text-white text-xl font-bold flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-600/30">
+            3
+          </div>
+          <h3 class="text-lg font-semibold text-slate-900 mb-3">Recibe tu informe</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            En segundos obtienes tu puntuación CMMI, informe ejecutivo y el plan de acción
+            priorizado por dominio. Listo para compartir con tu equipo directivo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       DOMINIOS CMMI
+  ════════════════════════════════════════════════ -->
+  <section id="dominios" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <div class="inline-block rounded-full bg-blue-100 px-4 py-1.5 text-sm font-medium text-blue-700 mb-4">
+          Cobertura
+        </div>
+        <h2 class="text-4xl font-bold text-slate-900 mb-4">
+          Los 5 dominios del modelo CMMI evaluados
+        </h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          Cobertura completa de las dimensiones que determinan la madurez real
+          de tu organización en gobernanza de datos.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- Gobierno de Datos -->
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group">
+          <div class="h-12 w-12 rounded-xl bg-white border border-slate-200 group-hover:border-blue-200 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
+            <svg class="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 mb-2">Gobierno de Datos</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Políticas, roles, responsabilidades y marcos de decisión.</p>
+        </div>
+
+        <!-- Calidad de Datos -->
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group">
+          <div class="h-12 w-12 rounded-xl bg-white border border-slate-200 group-hover:border-blue-200 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
+            <svg class="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 mb-2">Calidad de Datos</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Estándares y controles de precisión, completitud y consistencia.</p>
+        </div>
+
+        <!-- Arquitectura de Datos -->
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group">
+          <div class="h-12 w-12 rounded-xl bg-white border border-slate-200 group-hover:border-blue-200 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
+            <svg class="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 mb-2">Arquitectura de Datos</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Modelos, integración e infraestructura de datos.</p>
+        </div>
+
+        <!-- Gestión de Metadatos -->
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group">
+          <div class="h-12 w-12 rounded-xl bg-white border border-slate-200 group-hover:border-blue-200 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
+            <svg class="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 mb-2">Gestión de Metadatos</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Catalogación, linaje y glosario de negocio.</p>
+        </div>
+
+        <!-- Cultura & Personas -->
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group">
+          <div class="h-12 w-12 rounded-xl bg-white border border-slate-200 group-hover:border-blue-200 group-hover:bg-blue-50 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
+            <svg class="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+              <path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 mb-2">Cultura &amp; Personas</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Alfabetización, adopción y cambio cultural data-driven.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       CTA FINAL
+  ════════════════════════════════════════════════ -->
+  <section class="py-28 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <!-- Decorative blurs -->
+    <div class="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-blue-600/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-cyan-600/10 blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-3xl mx-auto text-center px-6">
+      <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+        Tu hoja de ruta hacia la<br>
+        <span class="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+          excelencia en datos
+        </span>
+        empieza hoy
+      </h2>
+      <p class="text-lg text-slate-300 mb-10 leading-relaxed">
+        Únete a las organizaciones que ya conocen su nivel CMMI y tienen un plan claro
+        para mejorar su gobernanza de datos. Gratuito, en menos de 10 minutos.
+      </p>
+      <a href="/evaluacion"
+         class="inline-flex justify-center rounded-md bg-blue-600 px-10 py-4 text-base font-semibold text-white shadow-xl hover:bg-blue-700 transition-colors">
+        Iniciar Evaluación Gratuita &rarr;
+      </a>
+      <p class="mt-6 text-sm text-slate-500">
+        Sin tarjeta de crédito &middot; Solo correo corporativo &middot; Resultados inmediatos
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════ -->
+  <footer class="bg-slate-950 border-t border-slate-800 py-12">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2">
+        <svg class="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="3" x2="12" y2="21"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <polyline points="16.5 7.5 12 12 7.5 16.5" stroke-width="2"/>
+        </svg>
+        <span class="text-white font-bold text-sm">Data<span class="text-blue-400">Compass</span></span>
+      </div>
+      <p class="text-sm text-slate-500 text-center">
+        &copy; 2024 DataCompass. Herramienta de evaluación CMMI para gobernanza de datos.
+      </p>
+      <div class="flex items-center gap-6">
+        <a href="/evaluacion" class="text-sm text-slate-400 hover:text-white transition-colors">Evaluación</a>
+        <a href="#dominios"   class="text-sm text-slate-400 hover:text-white transition-colors">Dominios</a>
+      </div>
+    </div>
+  </footer>
+
 </Layout>
+
+<!-- ═══════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════════ -->
+<script>
+  // --- Navbar scroll effect ---
+  const navbar = document.getElementById('navbar');
+  if (navbar) {
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+  }
+
+  // --- Scroll hint fade-out ---
+  const hint = document.getElementById('scroll-hint');
+  if (hint) {
+    window.addEventListener('scroll', () => {
+      hint.classList.toggle('hidden-hint', window.scrollY > 80);
+    }, { passive: true });
+  }
+
+  // --- 3D Dot Canvas Animation ---
+  (function () {
+    const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const NUM_DOTS     = 260;
+    const FOV          = 400;
+    const SPEED        = 0.35;
+    const Z_FAR        = 900;
+    const Z_NEAR       = 60;
+    const CONNECT_DIST = 140;       // screen-space px threshold
+    const MAX_LINKS    = 4;
+
+    interface Dot { x: number; y: number; z: number; sx: number; sy: number; r: number; alpha: number; }
+
+    const dots: Dot[] = [];
+
+    function rnd(a: number, b: number) { return Math.random() * (b - a) + a; }
+
+    function scatter(d: Dot) {
+      d.x = rnd(-canvas.width * 1.5, canvas.width * 1.5);
+      d.y = rnd(-canvas.height * 1.5, canvas.height * 1.5);
+      d.z = rnd(Z_NEAR + 60, Z_FAR);
+    }
+
+    function init() {
+      dots.length = 0;
+      for (let i = 0; i < NUM_DOTS; i++) {
+        const d: Dot = { x: 0, y: 0, z: 0, sx: 0, sy: 0, r: 0, alpha: 0 };
+        scatter(d);
+        d.z = rnd(Z_NEAR, Z_FAR); // stagger initial depth
+        dots.push(d);
+      }
+    }
+
+    function resize() {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+
+    function project(d: Dot) {
+      const scale = FOV / (d.z + FOV);
+      d.sx    = d.x * scale + canvas.width  / 2;
+      d.sy    = d.y * scale + canvas.height / 2;
+      d.r     = Math.max(0.5, 2.8 * scale);
+      d.alpha = Math.min(1, scale * 1.3);
+    }
+
+    function dotColor(d: Dot): string {
+      const t = 1 - d.z / Z_FAR;                  // 0 = far, 1 = near
+      const r = Math.round(71  + (96  - 71)  * t); // slate-600 → blue-400
+      const g = Math.round(85  + (165 - 85)  * t);
+      const b = Math.round(105 + (250 - 105) * t);
+      return `rgba(${r},${g},${b},${d.alpha})`;
+    }
+
+    let raf = 0;
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const d of dots) {
+        d.z -= SPEED;
+        if (d.z < Z_NEAR) scatter(d);
+        project(d);
+      }
+
+      // Lines
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < dots.length; i++) {
+        let links = 0;
+        for (let j = i + 1; j < dots.length; j++) {
+          if (links >= MAX_LINKS) break;
+          const dx = dots[i].sx - dots[j].sx;
+          const dy = dots[i].sy - dots[j].sy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECT_DIST) {
+            const opacity = (1 - dist / CONNECT_DIST) * 0.18 * Math.min(dots[i].alpha, dots[j].alpha);
+            ctx.strokeStyle = `rgba(96,165,250,${opacity})`;
+            ctx.beginPath();
+            ctx.moveTo(dots[i].sx, dots[i].sy);
+            ctx.lineTo(dots[j].sx, dots[j].sy);
+            ctx.stroke();
+            links++;
+          }
+        }
+      }
+
+      // Dots
+      for (const d of dots) {
+        ctx.beginPath();
+        ctx.arc(d.sx, d.sy, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = dotColor(d);
+        ctx.fill();
+      }
+
+      raf = requestAnimationFrame(animate);
+    }
+
+    const ro = new ResizeObserver(() => { resize(); init(); });
+    ro.observe(canvas);
+    resize();
+    init();
+    animate();
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+      } else {
+        animate();
+      }
+    });
+  })();
+</script>

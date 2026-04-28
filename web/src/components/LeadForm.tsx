@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const BLACKLISTED_DOMAINS = [
   'gmail.com',
@@ -30,7 +30,6 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
     correo: '',
   });
   const [error, setError] = useState<string | null>(null);
-  const [touched, setTouched] = useState(false);
 
   const getDomain = (email: string) => {
     const parts = email.split('@');
@@ -44,23 +43,19 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
 
   const handleChange = (field: keyof LeadData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    setTouched(true);
     setError(null);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!formData.nombre || !formData.cargo || !formData.empresa || !formData.correo) {
       setError('Por favor, completa todos los campos');
       return;
     }
-
     if (!isCorporateEmail(formData.correo)) {
       setError('Por favor, utiliza un correo corporativo válido');
       return;
     }
-
     sessionStorage.setItem('leadData', JSON.stringify(formData));
     onSuccess(formData);
   };
@@ -68,77 +63,81 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
   const isValid = formData.nombre && formData.cargo && formData.empresa && formData.correo && isCorporateEmail(formData.correo);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="max-w-md w-full">
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden p-8">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2 text-center">
-            Evaluación de Gobernanza de Datos
-          </h1>
-          <p className="text-base text-slate-600 leading-relaxed mb-8 text-center">
-            Ingresa tus datos para comenzar la evaluación
+    <div className="min-h-screen flex flex-col bg-slate-950">
+      {/* Navbar */}
+      <nav className="flex items-center justify-between px-6 lg:px-8 h-16 border-b border-slate-800">
+        <a href="/" className="flex items-center gap-2.5">
+          <svg className="h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <line x1="12" y1="3" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <polyline points="16.5 7.5 12 12 7.5 16.5" strokeWidth="2"/>
+          </svg>
+          <span className="text-lg font-bold text-white tracking-tight">Data<span className="text-blue-400">Compass</span></span>
+        </a>
+        <span className="text-sm text-slate-400">Paso 1 de 2 — Registro</span>
+      </nav>
+
+      {/* Main */}
+      <div className="flex-1 flex items-center justify-center px-4 py-16">
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-300 mb-6">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+              Evaluación CMMI · Gobernanza de Datos
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">Registra tu empresa</h1>
+            <p className="text-slate-400 text-base leading-relaxed">
+              Solo correo corporativo. Tus datos son confidenciales y se usan únicamente para personalizar tu informe.
+            </p>
+          </div>
+
+          {/* Card */}
+          <div className="rounded-xl border border-slate-800 bg-slate-900 shadow-xl p-8">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {[
+                { field: 'nombre' as keyof LeadData, label: 'Nombre completo', type: 'text', placeholder: 'Ej. María García López' },
+                { field: 'cargo' as keyof LeadData, label: 'Cargo', type: 'text', placeholder: 'Ej. Chief Data Officer' },
+                { field: 'empresa' as keyof LeadData, label: 'Empresa', type: 'text', placeholder: 'Ej. Acme Corp' },
+                { field: 'correo' as keyof LeadData, label: 'Correo corporativo', type: 'email', placeholder: 'nombre@empresa.com' },
+              ].map(({ field, label, type, placeholder }) => (
+                <div key={field}>
+                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    {label}
+                  </label>
+                  <input
+                    type={type}
+                    value={formData[field]}
+                    onChange={e => handleChange(field, e.target.value)}
+                    placeholder={placeholder}
+                    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  />
+                </div>
+              ))}
+
+              {error && (
+                <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
+                  <svg className="h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2.5"/>
+                  </svg>
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={!isValid}
+                className="w-full inline-flex justify-center rounded-md bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+              >
+                Comenzar Evaluación →
+              </button>
+            </form>
+          </div>
+
+          <p className="text-center text-xs text-slate-600 mt-6">
+            Tus datos no serán compartidos con terceros
           </p>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Nombre completo
-              </label>
-              <input
-                type="text"
-                value={formData.nombre}
-                onChange={e => handleChange('nombre', e.target.value)}
-                className="w-full rounded-lg border border-slate-200 px-4 py-2 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Cargo
-              </label>
-              <input
-                type="text"
-                value={formData.cargo}
-                onChange={e => handleChange('cargo', e.target.value)}
-                className="w-full rounded-lg border border-slate-200 px-4 py-2 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Empresa
-              </label>
-              <input
-                type="text"
-                value={formData.empresa}
-                onChange={e => handleChange('empresa', e.target.value)}
-                className="w-full rounded-lg border border-slate-200 px-4 py-2 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Correo electrónico
-              </label>
-              <input
-                type="email"
-                value={formData.correo}
-                onChange={e => handleChange('correo', e.target.value)}
-                className="w-full rounded-lg border border-slate-200 px-4 py-2 text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              />
-            </div>
-
-            {error && (
-              <div className="text-red-600 text-sm">{error}</div>
-            )}
-
-            <button
-              type="submit"
-              disabled={!isValid}
-              className="w-full inline-flex justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Comenzar Evaluación
-            </button>
-          </form>
         </div>
       </div>
     </div>
