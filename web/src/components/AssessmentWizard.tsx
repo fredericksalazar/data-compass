@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ResultDashboard from './ResultDashboard';
 
 interface Option {
   level: number;
@@ -35,6 +36,7 @@ interface DomainScore {
 }
 
 interface AssessmentResult {
+  assessment_id: string;
   overall_score: number;
   domain_scores: DomainScore[];
 }
@@ -78,7 +80,16 @@ export default function AssessmentWizard() {
 
   const submitAssessment = async (finalAnswers: Map<string, number>) => {
     setSubmitting(true);
+    
+    const leadData = JSON.parse(sessionStorage.getItem('leadData') || '{}');
+    
     const payload = {
+      lead: {
+        name: leadData.nombre || '',
+        company: leadData.empresa || '',
+        role: leadData.cargo || '',
+        email: leadData.correo || ''
+      },
       answers: Array.from(finalAnswers.entries()).map(([question_id, level]) => ({
         question_id,
         level,
@@ -118,37 +129,7 @@ export default function AssessmentWizard() {
   }
 
   if (result) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-        <div className="max-w-2xl w-full">
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden p-8">
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-6 text-center">
-              Resultados de tu Evaluación
-            </h1>
-            <div className="text-center mb-8">
-              <div className="text-6xl font-bold text-blue-600 mb-2">
-                {result.overall_score.toFixed(1)}
-              </div>
-              <div className="text-slate-600">Puntaje Overall</div>
-            </div>
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-slate-800 mb-4">Puntajes por Dominio</h2>
-              {result.domain_scores.map((domain) => (
-                <div key={domain.domain_name} className="flex justify-between items-center p-4 rounded-lg border border-slate-200">
-                  <span className="text-slate-900">{domain.domain_name}</span>
-                  <span className="text-blue-600 font-semibold">{domain.score.toFixed(1)}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 text-center">
-              <a href="/" className="inline-flex justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors">
-                Volver al Inicio
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <ResultDashboard result={result} />;
   }
 
   if (!currentQuestion) return null;

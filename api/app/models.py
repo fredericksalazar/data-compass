@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 
 class Option(BaseModel):
@@ -31,7 +31,15 @@ class Answer(BaseModel):
     level: int = Field(..., ge=1, le=5)
 
 
+class Lead(BaseModel):
+    name: str
+    company: str
+    role: str
+    email: str
+
+
 class AssessmentSubmission(BaseModel):
+    lead: Lead
     answers: List[Answer]
 
 
@@ -41,5 +49,6 @@ class DomainScore(BaseModel):
 
 
 class AssessmentResult(BaseModel):
+    assessment_id: str
     overall_score: float
     domain_scores: List[DomainScore]

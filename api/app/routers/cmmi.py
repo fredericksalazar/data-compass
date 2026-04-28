@@ -1,7 +1,9 @@
 import json
 from pathlib import Path
+from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException
 from ..models import AssessmentSchema, AssessmentSubmission, AssessmentResult, DomainScore
+from ..core.firebase import db
 
 router = APIRouter()
 
@@ -27,9 +29,8 @@ async def calculate_cmmi_assessment(submission: AssessmentSubmission):
     with open(DATA_PATH, "r") as f:
         data = json.load(f)
     
-    # Map questions for quick access and group by domain
     question_map = {}
-    domain_weights = {}  # {domain_name: total_weight}
+    domain_weights = {}
     
     for domain in data.get("domains", []):
         d_name = domain.get("name")
@@ -44,10 +45,8 @@ async def calculate_cmmi_assessment(submission: AssessmentSubmission):
             total_w += q_weight
         domain_weights[d_name] = total_w
     
-    # Initialize scores
     domain_weighted_sums = {d_name: 0.0 for d_name in domain_weights}
     
-    # Process submission
     for answer in submission.answers:
         if answer.question_id not in question_map:
             raise HTTPException(status_code=400, detail=f"Question ID {answer.question_id} not found in schema")
@@ -58,23 +57,35 @@ async def calculate_cmmi_assessment(submission: AssessmentSubmission):
         
         domain_weighted_sums[domain] += answer.level * weight
     
-    # Calculate scores per domain
     results_domain_scores = []
     total_domain_scores_sum = 0.0
     
     for d_name, total_w in domain_weights.items():
         weighted_sum = domain_weighted_sums.get(d_name, 0.0)
-        # Average weighted: sum(level * weight) / sum(weights of domain)
         score = weighted_sum / total_w if total_w > 0 else 0.0
         score = round(score, 2)
         
         results_domain_scores.append(DomainScore(domain_name=d_name, score=score))
         total_domain_scores_sum += score
-        
-    # Overall score: sum of 5 domains / 5
+    
     overall_score = round(total_domain_scores_sum / 5, 2)
     
+    doc_ref = db.collection("assessments").document()
+    doc_data = {
+        "lead": submission.lead.model_dump(),
+        "answers": [a.model_dump() for a in submission.answers],
+        "scores": {
+            "overall_score": overall_score,
+            "domain_scores": [ds.model_dump() for ds in results_domain_scores]
+        },
+        "created_at": datetime.now(timezone.utc)
+    }
+    doc_ref.set(doc_data)
+    
+    assessment_id = doc_ref.id
+    
     return AssessmentResult(
+        assessment_id=assessment_id,
         overall_score=overall_score,
         domain_scores=results_domain_scores
     )
