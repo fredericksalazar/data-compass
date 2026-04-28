@@ -52,6 +52,8 @@ export default function AssessmentWizard() {
 
   const allQuestions = schema?.domains.flatMap(d => d.questions) ?? [];
   const currentQuestion = allQuestions[currentIndex];
+  const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
+
   const progress = (currentIndex / allQuestions.length) * 100;
 
   // Derive current domain name
@@ -66,7 +68,7 @@ export default function AssessmentWizard() {
   }
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/v1/assessments/cmmi/schema')
+    fetch(`${API_URL}/api/v1/assessments/cmmi/schema')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch schema');
         return res.json();
@@ -103,7 +105,7 @@ export default function AssessmentWizard() {
     };
 
     try {
-      const res = await fetch('http://localhost:8000/api/v1/assessments/cmmi/calculate', {
+      const res = await fetch(`${API_URL}/api/v1/assessments/cmmi/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
