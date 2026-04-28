@@ -1,0 +1,356 @@
+{
+  "version": "1.0",
+  "total_questions": 25,
+  "domains": [
+    {
+      "name": "Gobierno de Datos",
+      "questions": [
+        {
+          "id": "GOB_01",
+          "title": "Roles y Responsabilidades",
+          "question_text": "¿Cómo se asignan y gestionan los roles de custodia sobre la información (ej. Data Owners, Data Stewards)?",
+          "weight": 1.2,
+          "options": [
+            {"level": 1, "text": "No existen roles definidos; TI asume la responsabilidad de forma reactiva."},
+            {"level": 2, "text": "Existen responsables informales en áreas específicas, pero sin autoridad corporativa."},
+            {"level": 3, "text": "Roles de Data Owners y Stewards formalmente definidos y asignados mediante políticas."},
+            {"level": 4, "text": "Los responsables de datos tienen KPIs específicos y acuerdos de nivel de servicio (SLA)."},
+            {"level": 5, "text": "La gestión de roles está integrada en el ciclo de vida del negocio y es autosuficiente."}
+          ]
+        },
+        {
+          "id": "GOB_02",
+          "title": "Glosario y Diccionario",
+          "question_text": "¿Cuál es el estado del glosario de términos de negocio y el diccionario de datos técnicos en la organización?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "No existe documentación; el conocimiento reside solo en la mente de las personas."},
+            {"level": 2, "text": "Existen diccionarios técnicos aislados o excels por departamento sin estandarización."},
+            {"level": 3, "text": "Glosario de negocio y diccionario técnico unificado y accesible para toda la empresa."},
+            {"level": 4, "text": "Glosario vinculado a linaje de datos y actualizado mediante flujos de trabajo."},
+            {"level": 5, "text": "Uso de semántica avanzada y catálogos de datos inteligentes que se auto-actualizan."}
+          ]
+        },
+        {
+          "id": "GOB_03",
+          "title": "Gestión de Metadatos",
+          "question_text": "¿Cómo se documentan, centralizan y rastrean los metadatos (el contexto de los datos) a lo largo de la empresa?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "No se capturan metadatos; no se conoce el origen ni el contexto de la información."},
+            {"level": 2, "text": "Se capturan metadatos básicos de forma manual en algunos sistemas críticos."},
+            {"level": 3, "text": "Estrategia corporativa para capturar metadatos técnicos, de negocio y operacionales."},
+            {"level": 4, "text": "Uso de herramientas de catálogo de datos que permiten trazabilidad y linaje."},
+            {"level": 5, "text": "Metadatos activos que impulsan la automatización de la gobernanza."}
+          ]
+        },
+        {
+          "id": "GOB_04",
+          "title": "Seguridad y Privacidad",
+          "question_text": "¿Cómo se establecen y controlan las políticas de acceso, enmascaramiento de datos y cumplimiento normativo?",
+          "weight": 1.3,
+          "options": [
+            {"level": 1, "text": "Acceso libre o sin controles claros; seguridad basada solo en perímetros de red."},
+            {"level": 2, "text": "Controles de acceso básicos por usuario; políticas documentadas pero no aplicadas."},
+            {"level": 3, "text": "Políticas de enmascaramiento y acceso basadas en roles (RBAC) estandarizadas."},
+            {"level": 4, "text": "Auditorías de acceso automatizadas y cumplimiento monitoreado en tiempo real."},
+            {"level": 5, "text": "Privacidad desde el diseño (Privacy by Design) e IA para detectar fugas proactivamente."}
+          ]
+        },
+        {
+          "id": "GOB_05",
+          "title": "Comité Directivo",
+          "question_text": "¿Existe un consejo, comité o figura de autoridad ejecutiva que resuelva conflictos y priorice la estrategia de datos?",
+          "weight": 1.5,
+          "options": [
+            {"level": 1, "text": "No existe un órgano de gobierno; las decisiones sobre datos son tácticas e individuales."},
+            {"level": 2, "text": "Reuniones ad-hoc entre TI y Negocio para resolver conflictos puntuales."},
+            {"level": 3, "text": "Consejo de Gobierno de Datos formal con participación de líderes de todas las áreas."},
+            {"level": 4, "text": "El comité tiene presupuesto propio, autoridad y mide el ROI de las iniciativas."},
+            {"level": 5, "text": "La gobernanza de datos es parte integral de la junta directiva y la estrategia corporativa."}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Calidad de Datos",
+      "questions": [
+        {
+          "id": "CAL_01",
+          "title": "Reglas y Criterios",
+          "question_text": "¿Cómo define y documenta la organización los criterios que determinan si un dato es 'apto para su propósito'?",
+          "weight": 1.1,
+          "options": [
+            {"level": 1, "text": "No hay criterios definidos; se asume que los datos están bien hasta que fallan."},
+            {"level": 2, "text": "Existen reglas subjetivas o validadas manualmente por el equipo técnico."},
+            {"level": 3, "text": "Reglas de calidad (completitud, validez) documentadas y aprobadas por Negocio."},
+            {"level": 4, "text": "Reglas de calidad automatizadas en el pipeline con alertas inmediatas."},
+            {"level": 5, "text": "Optimización continua de reglas basada en el impacto económico de los errores."}
+          ]
+        },
+        {
+          "id": "CAL_02",
+          "title": "Perfilamiento (Profiling)",
+          "question_text": "¿Con qué frecuencia y profundidad se evalúa la salud, estructura y anomalías de las fuentes de datos originales?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "Nunca se analizan las fuentes; los errores se descubren en producción."},
+            {"level": 2, "text": "Perfilamiento ocasional realizado solo durante migraciones o proyectos nuevos."},
+            {"level": 3, "text": "Procesos periódicos de perfilamiento para identificar anomalías en fuentes críticas."},
+            {"level": 4, "text": "Perfilamiento automatizado integrado en la ingesta con dashboards de salud."},
+            {"level": 5, "text": "Detección proactiva de derivación de datos (data drift) mediante modelos estadísticos."}
+          ]
+        },
+        {
+          "id": "CAL_03",
+          "title": "Gestión de Incidencias",
+          "question_text": "¿Qué flujo de trabajo se desencadena cuando se detecta un error crítico en los datos?",
+          "weight": 1.1,
+          "options": [
+            {"level": 1, "text": "No hay proceso; los errores se reportan por canales informales y se pierden."},
+            {"level": 2, "text": "Las incidencias se gestionan como tickets de soporte técnico generales de TI."},
+            {"level": 3, "text": "Flujo de trabajo formal para reportar, priorizar y resolver problemas de calidad."},
+            {"level": 4, "text": "Análisis de causa raíz sistemático y seguimiento de tiempos de resolución."},
+            {"level": 5, "text": "Autocorrección de incidencias comunes y prevención de errores en el origen."}
+          ]
+        },
+        {
+          "id": "CAL_04",
+          "title": "Métricas y Monitoreo",
+          "question_text": "¿Cómo se mide y reporta la salud de los datos (completitud, exactitud, frescura) a los stakeholders?",
+          "weight": 1.2,
+          "options": [
+            {"level": 1, "text": "No existen métricas; no se sabe si los datos están mejorando o empeorando."},
+            {"level": 2, "text": "Informes manuales ocasionales sobre cantidad de registros o errores básicos."},
+            {"level": 3, "text": "Tableros (dashboards) de calidad de datos actualizados para los Data Owners."},
+            {"level": 4, "text": "Métricas vinculadas a procesos de negocio y SLAs de disponibilidad."},
+            {"level": 5, "text": "Monitoreo predictivo que alerta sobre posibles caídas de calidad proactivamente."}
+          ]
+        },
+        {
+          "id": "CAL_05",
+          "title": "Limpieza (Cleansing)",
+          "question_text": "¿Cómo se ejecutan los procesos de corrección de datos anómalos o duplicados?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "No se limpian los datos; se convive con la duplicidad y el error."},
+            {"level": 2, "text": "Limpieza manual y puntual cuando un reporte sale con errores evidentes."},
+            {"level": 3, "text": "Procesos estandarizados de limpieza dentro de los flujos ETL/ELT."},
+            {"level": 4, "text": "Limpieza continua y deduplicación avanzada (MDM básico)."},
+            {"level": 5, "text": "Los datos se limpian y enriquecen en tiempo real con fuentes externas."}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Arquitectura y Plataforma",
+      "questions": [
+        {
+          "id": "ARQ_01",
+          "title": "Visión Arquitectónica",
+          "question_text": "¿Existe un diseño tecnológico unificado (ej. Lakehouse) que guíe la explotación de la información?",
+          "weight": 1.3,
+          "options": [
+            {"level": 1, "text": "Silos de datos aislados; cada aplicación tiene su propia base de datos sin conexión."},
+            {"level": 2, "text": "Existe un almacén centralizado (Data Warehouse) pero con integraciones frágiles."},
+            {"level": 3, "text": "Arquitectura moderna (Data Lakehouse) definida como estándar corporativo."},
+            {"level": 4, "text": "Arquitectura distribuida y escalable (Data Mesh) gobernada por dominios."},
+            {"level": 5, "text": "Plataforma nativa en la nube, elástica y optimizada para tiempo real."}
+          ]
+        },
+        {
+          "id": "ARQ_02",
+          "title": "Integración de Datos",
+          "question_text": "¿Cómo se gestiona el flujo, orquestación e integración de datos entre los sistemas transaccionales y analíticos?",
+          "weight": 1.1,
+          "options": [
+            {"level": 1, "text": "Transferencia manual de archivos (Excel/CSV) entre áreas o sistemas."},
+            {"level": 2, "text": "Scripts automáticos básicos para mover datos en procesos por lotes (Batch)."},
+            {"level": 3, "text": "Plataforma de integración gestionada con orquestación y monitoreo."},
+            {"level": 4, "text": "Integraciones vía API y streaming para disponibilidad casi inmediata."},
+            {"level": 5, "text": "Ecosistema guiado por eventos (Event-Driven) con latencia mínima."}
+          ]
+        },
+        {
+          "id": "ARQ_03",
+          "title": "Modelado Corporativo",
+          "question_text": "¿Cómo se estructuran, mantienen y versionan los modelos de datos lógicos y físicos?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "No hay modelos; las tablas se crean según la necesidad inmediata."},
+            {"level": 2, "text": "Modelos físicos documentados en diagramas que rara vez están actualizados."},
+            {"level": 3, "text": "Modelos lógicos corporativos y capas semánticas que unifican el lenguaje de negocio."},
+            {"level": 4, "text": "Modelado automatizado y versionado (Data Modeling as Code)."},
+            {"level": 5, "text": "Uso de grafos de conocimiento y modelos semánticos autodescriptivos."}
+          ]
+        },
+        {
+          "id": "ARQ_04",
+          "title": "Estándares de Diseño",
+          "question_text": "¿Cómo se asegura que cualquier nuevo software adquirido cumpla con los lineamientos de arquitectura corporativos?",
+          "weight": 1.1,
+          "options": [
+            {"level": 1, "text": "No hay estándares; cada proyecto elige su propia tecnología de datos."},
+            {"level": 2, "text": "TI revisa los proyectos de datos pero sin una guía formal de cumplimiento."},
+            {"level": 3, "text": "Políticas obligatorias de diseño y nomenclatura para cualquier nuevo desarrollo."},
+            {"level": 4, "text": "Validación automática de estándares mediante herramientas de CI/CD."},
+            {"level": 5, "text": "Evolución continua de estándares basada en el desempeño de la plataforma."}
+          ]
+        },
+        {
+          "id": "ARQ_05",
+          "title": "Retención y Archivado",
+          "question_text": "¿Qué políticas tecnológicas rigen el almacenamiento histórico y la purga de datos inactivos?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "Se guarda todo para siempre o se borra según se necesite espacio."},
+            {"level": 2, "text": "Políticas de respaldo básicas pero sin estrategia de purga o archivado."},
+            {"level": 3, "text": "Políticas de retención definidas por tipo de dato y requerimiento legal."},
+            {"level": 4, "text": "Archivado automático en capas de bajo costo (Storage Tiering)."},
+            {"level": 5, "text": "Gestión inteligente que purga datos sin valor de forma automatizada y segura."}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Operaciones de Datos",
+      "questions": [
+        {
+          "id": "OPE_01",
+          "title": "Ciclo de Vida",
+          "question_text": "¿Cómo se administra el trayecto del dato desde que nace hasta su disposición final o destrucción?",
+          "weight": 1.1,
+          "options": [
+            {"level": 1, "text": "Solo se gestiona el almacenamiento; no se conoce el ciclo de vida del dato."},
+            {"level": 2, "text": "Gestión centrada en la ingesta, sin control sobre su uso o fin posterior."},
+            {"level": 3, "text": "Proceso definido desde la captura hasta la disposición final o destrucción."},
+            {"level": 4, "text": "Monitoreo del linaje completo y auditoría de uso en cada etapa del ciclo."},
+            {"level": 5, "text": "Optimización del ciclo de vida para reducir costos de almacenamiento."}
+          ]
+        },
+        {
+          "id": "OPE_02",
+          "title": "Definición de Requerimientos",
+          "question_text": "¿Cómo es el proceso mediante el cual las áreas de negocio solicitan nuevos productos de datos al equipo técnico?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "Los requerimientos se piden por canales informales (email, chat)."},
+            {"level": 2, "text": "Uso de formularios básicos para solicitar extracciones o tableros."},
+            {"level": 3, "text": "Sistema de gestión de demanda con priorización basada en valor de negocio."},
+            {"level": 4, "text": "Proceso de descubrimiento de producto (Data Discovery) con stakeholders."},
+            {"level": 5, "text": "Autoservicio total donde el negocio configura sus propios requerimientos."}
+          ]
+        },
+        {
+          "id": "OPE_03",
+          "title": "Automatización de Pipelines",
+          "question_text": "¿Cuál es el grado de madurez y automatización en las canalizaciones de datos (ETL/ELT)?",
+          "weight": 1.2,
+          "options": [
+            {"level": 1, "text": "Procesos manuales; se ejecutan scripts o se cargan archivos a mano."},
+            {"level": 2, "text": "Programación básica de tareas (Cron jobs) con poco control de errores."},
+            {"level": 3, "text": "Pipelines orquestados con reintentos y alertas automáticas."},
+            {"level": 4, "text": "Implementación de metodologías DataOps (CI/CD para datos)."},
+            {"level": 5, "text": "Pipelines auto-ajustables y resilientes que escalan según la carga."}
+          ]
+        },
+        {
+          "id": "OPE_04",
+          "title": "Proveedores Externos",
+          "question_text": "¿Cómo se controla la ingesta y calidad de los datos que provienen de terceros o APIs externas?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "No hay control sobre datos externos; se aceptan tal como llegan."},
+            {"level": 2, "text": "Revisión manual ocasional de la calidad de los archivos de terceros."},
+            {"level": 3, "text": "Contratos de datos con especificaciones técnicas y validaciones de entrada."},
+            {"level": 4, "text": "Monitoreo en tiempo real de la calidad y puntualidad de proveedores."},
+            {"level": 5, "text": "Integración fluida en un ecosistema de intercambio de datos seguro."}
+          ]
+        },
+        {
+          "id": "OPE_05",
+          "title": "Resiliencia Operativa",
+          "question_text": "¿Cómo se garantizan los respaldos, la alta disponibilidad y la recuperación ante desastres?",
+          "weight": 1.2,
+          "options": [
+            {"level": 1, "text": "No hay plan de recuperación; una caída implica pérdida de datos."},
+            {"level": 2, "text": "Respaldos periódicos pero sin pruebas de restauración."},
+            {"level": 3, "text": "Estrategia de recuperación (DRP) con objetivos RTO/RPO definidos."},
+            {"level": 4, "text": "Alta disponibilidad activa y monitoreo continuo de la salud de la plataforma."},
+            {"level": 5, "text": "Sistemas de auto-recuperación y pruebas de caos (Chaos Engineering)."}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cultura y Estrategia",
+      "questions": [
+        {
+          "id": "CUL_01",
+          "title": "Alineación Estratégica",
+          "question_text": "¿En qué medida la estrategia de datos influye y cuenta con presupuesto dentro de la estrategia general?",
+          "weight": 1.5,
+          "options": [
+            {"level": 1, "text": "Los datos no son prioridad; la estrategia se basa en intuiciones."},
+            {"level": 2, "text": "Se mencionan los datos pero no hay presupuesto ni equipo dedicado."},
+            {"level": 3, "text": "Estrategia formal con presupuesto y objetivos vinculados al negocio."},
+            {"level": 4, "text": "Los datos son el eje central de las decisiones y de los OKRs corporativos."},
+            {"level": 5, "text": "Organización 'Data-Native' donde el dato impulsa nuevos modelos de negocio."}
+          ]
+        },
+        {
+          "id": "CUL_02",
+          "title": "Alfabetización (Data Literacy)",
+          "question_text": "¿Qué iniciativas existen para capacitar a los empleados no técnicos en el análisis y comunicación con datos?",
+          "weight": 1.2,
+          "options": [
+            {"level": 1, "text": "La mayoría de empleados no sabe interpretar un gráfico básico de datos."},
+            {"level": 2, "text": "Capacitación aislada en herramientas específicas (ej. cursos de Excel)."},
+            {"level": 3, "text": "Programa continuo de alfabetización para roles técnicos y de negocio."},
+            {"level": 4, "text": "Comunidades de práctica y cultura de autoservicio de datos extendida."},
+            {"level": 5, "text": "Los empleados usan los datos con fluidez para innovar en sus tareas."}
+          ]
+        },
+        {
+          "id": "CUL_03",
+          "title": "Toma de Decisiones",
+          "question_text": "¿Qué rol juegan los datos al definir nuevos productos o tomar decisiones ejecutivas críticas?",
+          "weight": 1.4,
+          "options": [
+            {"level": 1, "text": "Decisiones basadas en jerarquía o intuición del líder en turno."},
+            {"level": 2, "text": "Los datos se usan solo para justificar decisiones ya tomadas anteriormente."},
+            {"level": 3, "text": "Uso consistente de tableros de control para monitorear el desempeño."},
+            {"level": 4, "text": "Cultura de experimentación (A/B testing) y toma de decisiones objetiva."},
+            {"level": 5, "text": "Uso de IA predictiva para optimizar proactivamente cada decisión."}
+          ]
+        },
+        {
+          "id": "CUL_04",
+          "title": "Comunicación",
+          "question_text": "¿Cómo se difunden a nivel corporativo los éxitos y el valor generado por el equipo de datos?",
+          "weight": 1.0,
+          "options": [
+            {"level": 1, "text": "El equipo de datos trabaja en la sombra; nadie conoce sus logros."},
+            {"level": 2, "text": "Boletines informativos ocasionales sobre nuevos reportes disponibles."},
+            {"level": 3, "text": "Demostraciones periódicas y reportes de impacto económico de proyectos."},
+            {"level": 4, "text": "Reconocimientos internos por el uso innovador de datos en la empresa."},
+            {"level": 5, "text": "Evangelización externa; la empresa es referente industrial por su uso de datos."}
+          ]
+        },
+        {
+          "id": "CUL_05",
+          "title": "Gestión del Cambio",
+          "question_text": "¿Cómo se maneja la adopción de nuevas herramientas analíticas y la resistencia al cambio?",
+          "weight": 1.1,
+          "options": [
+            {"level": 1, "text": "Fuerte resistencia al cambio; se prefiere el método tradicional."},
+            {"level": 2, "text": "Se lanzan herramientas nuevas pero los usuarios vuelven a sus Excels."},
+            {"level": 3, "text": "Plan de gestión del cambio formal con 'Data Champions' por área."},
+            {"level": 4, "text": "Incentivos corporativos alineados al uso de las plataformas oficiales."},
+            {"level": 5, "text": "Mentalidad de aprendizaje continuo y evolución rápida ante la tecnología."}
+          ]
+        }
+      ]
+    }
+  ]
+}
