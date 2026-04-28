@@ -20,5 +20,5 @@ export default defineConfig({
     }),
   ],
 
-  site: 'https://datacompass.app',
+  site: 'https://data-compass-app.web.app',
 });
