@@ -64,3 +64,4 @@ dist/
 # AI Agent files
 .aiexclude
 AGENT_RULES.md
+.claude

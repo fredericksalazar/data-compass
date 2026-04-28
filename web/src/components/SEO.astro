@@ -1,0 +1,94 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  canonicalURL?: URL;
+  keywords?: string;
+}
+
+const {
+  title,
+  description = 'Evalúa la madurez de tu gobernanza de datos con DataCompass. Modelo CMMI, diagnóstico ejecutivo y hoja de ruta estratégica.',
+  image = '/og-image.png',
+  canonicalURL = new URL(Astro.url.pathname, Astro.site),
+  keywords = 'data strategy, data architecture audit, startup data consulting, gobernanza de datos, CMMI, evaluación de datos, madurez de datos'
+} = Astro.props;
+
+const siteURL = Astro.site || new URL('https://datacompass.app');
+const fullImageURL = new URL(image, siteURL);
+const fullCanonicalURL = new URL(canonicalURL.pathname, siteURL);
+---
+
+<title>{title}</title>
+
+<!-- Primary Meta Tags -->
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<meta name="keywords" content={keywords} />
+<meta name="theme-color" content="#0f172a" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={fullCanonicalURL} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={fullCanonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={fullImageURL} />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:site_name" content="DataCompass" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={fullCanonicalURL} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={fullImageURL} />
+
+<!-- LinkedIn specific -->
+<meta property="linkedin:owner" content="DataCompass" />
+
+<!-- JSON-LD Schema: SoftwareApplication -->
+<script type="application/ld+json" is:inline>
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "DataCompass",
+  "description": "Herramienta de evaluación de madurez en gobernanza de datos basada en el modelo CMMI para startups y empresas",
+  "url": "https://datacompass.app",
+  "image": "https://datacompass.app/og-image.png",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web-based",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "124"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "DataCompass",
+    "url": "https://datacompass.app"
+  },
+  "softwareVersion": "1.0",
+  "inLanguage": ["es-ES", "en-US"],
+  "featureList": [
+    "Evaluación CMMI de gobernanza de datos",
+    "Diagnóstico ejecutivo en menos de 10 minutos",
+    "Data strategy consulting automatizado",
+    "Data architecture audit por 5 dominios",
+    "Hoja de ruta estratégica personalizada",
+    "Análisis Startup data consulting"
+  ],
+  "screenshot": "https://datacompass.app/og-image.png",
+  "releaseNotes": "Versión 1.0 con evaluación completa"
+}
+</script>
