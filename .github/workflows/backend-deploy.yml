@@ -23,8 +23,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          cd api
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/datacompass-api:${{ github.sha }} .
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/datacompass-api:${{ github.sha }} -f api/Dockerfile api/
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/datacompass-api:${{ github.sha }}
 
       - name: Deploy to Cloud Run
@@ -35,5 +34,4 @@ jobs:
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated \
-            --port 8080 \
-            --set-env-vars FIREBASE_CREDENTIALS_PATH=firebase-credentials.json
+            --port 8080
