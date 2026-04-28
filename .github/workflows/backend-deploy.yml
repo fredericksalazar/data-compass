@@ -5,7 +5,11 @@ on:
     branches:
       - main
     paths:
-      - 'api/**'
+      - "api/**"
+
+env:
+  IMAGE_URL: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID
+    }}/datacompass-api/app-image:latest
 
 jobs:
   deploy:
@@ -19,18 +23,19 @@ jobs:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Configure Docker authentication
-        run: gcloud auth configure-docker --quiet
+        # Se añade la región específica para que el Push no sea rechazado
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
       - name: Build and push Docker image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/datacompass-api:${{ github.sha }} -f api/Dockerfile api/
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/datacompass-api:${{ github.sha }}
+          docker build -t $IMAGE_URL -f api/Dockerfile api/
+          docker push $IMAGE_URL
 
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy datacompass-api \
             --project ${{ secrets.GCP_PROJECT_ID }} \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/datacompass-api:${{ github.sha }} \
+            --image $IMAGE_URL \
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated \
