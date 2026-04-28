@@ -2,7 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="DataCompass — Evaluación de Madurez en Gobernanza de Datos" bodyClass="bg-slate-950">
+<Layout
+  title="DataCompass: Evaluación CMMI de Gobernanza de Datos para Empresas"
+  description="Evalúa la madurez de tu gobernanza de datos con DataCompass. Modelo CMMI, diagnóstico ejecutivo en 10 minutos, plan de acción estratégico. 100% gratuito, sin tarjeta de crédito."
+  image="/og-datacompass.png"
+  bodyClass="bg-slate-950">
 
   <style is:global>
     html { scroll-behavior: smooth; }
@@ -38,8 +42,8 @@ import Layout from '../layouts/Layout.astro';
   <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-2.5">
-        <svg class="h-7 w-7 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <a href="/" class="flex items-center gap-2.5" aria-label="Volver a inicio - DataCompass">
+        <svg class="h-7 w-7 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="9"/>
           <line x1="12" y1="3" x2="12" y2="21"/>
           <line x1="3" y1="12" x2="21" y2="12"/>
@@ -70,7 +74,7 @@ import Layout from '../layouts/Layout.astro';
        HERO — DARK + 3D CANVAS
   ════════════════════════════════════════════════ -->
   <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-950">
-    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full"></canvas>
+    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full" aria-hidden="true"></canvas>
 
     <!-- Radial vignette overlay -->
     <div class="absolute inset-0 bg-radial-[at_50%_50%] from-transparent via-transparent to-slate-950/80 pointer-events-none"></div>
@@ -78,16 +82,16 @@ import Layout from '../layouts/Layout.astro';
     <!-- Content -->
     <div class="relative z-10 text-center px-6 max-w-4xl mx-auto pt-16">
       <!-- Badge -->
-      <div class="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-300 mb-8">
-        <span class="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+      <div class="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-300 mb-8" role="complementary" aria-label="Tipo de evaluación">
+        <span class="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden="true"></span>
         Evaluación CMMI &middot; Gobernanza de Datos
       </div>
 
       <!-- Headline -->
       <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white leading-tight mb-6">
-        Descubre el nivel real de<br>
+        Evaluación de Madurez de Datos<br>
         <span class="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-          madurez de tus datos
+          basada en modelo CMMI
         </span>
       </h1>
 
@@ -112,9 +116,9 @@ import Layout from '../layouts/Layout.astro';
     </div>
 
     <!-- Scroll hint -->
-    <div id="scroll-hint" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500">
+    <div id="scroll-hint" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500" aria-hidden="true">
       <span class="text-xs tracking-widest uppercase">Explorar</span>
-      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
         <path d="M6 9l6 6 6-6"/>
       </svg>
     </div>
@@ -168,8 +172,8 @@ import Layout from '../layouts/Layout.astro';
       <div class="grid md:grid-cols-3 gap-6">
         <!-- Card 1 -->
         <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8">
-          <div class="h-12 w-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center mb-6">
-            <svg class="h-6 w-6 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <div class="h-12 w-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center mb-6" aria-hidden="true">
+            <svg class="h-6 w-6 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/>
               <line x1="12" y1="8" x2="12" y2="12"/>
               <line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/>
@@ -183,8 +187,8 @@ import Layout from '../layouts/Layout.astro';
         </div>
         <!-- Card 2 -->
         <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8">
-          <div class="h-12 w-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center mb-6">
-            <svg class="h-6 w-6 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <div class="h-12 w-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center mb-6" aria-hidden="true">
+            <svg class="h-6 w-6 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
               <line x1="12" y1="9" x2="12" y2="13"/>
               <line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2"/>
@@ -198,8 +202,8 @@ import Layout from '../layouts/Layout.astro';
         </div>
         <!-- Card 3 -->
         <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8">
-          <div class="h-12 w-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center mb-6">
-            <svg class="h-6 w-6 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <div class="h-12 w-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center mb-6" aria-hidden="true">
+            <svg class="h-6 w-6 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z"/>
             </svg>
           </div>

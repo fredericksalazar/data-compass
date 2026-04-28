@@ -3,6 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import EvaluationPage from '../components/EvaluationPage';
 ---
 
-<Layout title="Evaluación - DataCompass" bodyClass="bg-slate-950">
+<Layout
+  title="Evaluación CMMI de Gobernanza de Datos | DataCompass"
+  description="Inicia tu evaluación CMMI gratuita. Completa un formulario rápido y obtén tu diagnóstico de madurez en gobernanza de datos en menos de 10 minutos."
+  image="/og-evaluacion.png"
+  bodyClass="bg-slate-950">
   <EvaluationPage client:only="react" />
 </Layout>

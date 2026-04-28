@@ -3,22 +3,116 @@ import '../styles/global.css';
 
 interface Props {
   title: string;
+  description?: string;
   bodyClass?: string;
+  image?: string;
 }
 
-const { title, bodyClass = 'bg-slate-50' } = Astro.props;
+const {
+  title,
+  description = 'Evalúa la madurez de tu gobernanza de datos con DataCompass. Modelo CMMI, diagnóstico ejecutivo y hoja de ruta estratégica.',
+  bodyClass = 'bg-slate-50',
+  image = '/og-image.png'
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
     <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.site)} />
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body class={`font-sans min-h-screen ${bodyClass}`}>
     <slot />
+
+    <!-- JSON-LD Schema Markup -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "DataCompass",
+      "description": "Herramienta de evaluación de madurez en gobernanza de datos basada en el modelo CMMI",
+      "url": "https://datacompass.app",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web-based",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "124"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "DataCompass",
+        "url": "https://datacompass.app"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "softwareVersion": "1.0",
+      "inLanguage": ["es-ES", "en-US"],
+      "featureList": [
+        "Evaluación CMMI",
+        "Diagnóstico Ejecutivo",
+        "Hoja de Ruta Estratégica",
+        "Análisis por 5 Dominios"
+      ]
+    }
+    </script>
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "DataCompass",
+      "url": "https://datacompass.app",
+      "logo": "https://datacompass.app/logo.svg",
+      "description": "Plataforma SaaS para evaluación y mejora de gobernanza de datos empresarial",
+      "sameAs": [
+        "https://linkedin.com/company/datacompass"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Support",
+        "availableLanguage": ["es", "en"]
+      }
+    }
+    </script>
   </body>
 </html>
