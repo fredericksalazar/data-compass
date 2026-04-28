@@ -1,0 +1,7 @@
+node_modules/
+web/
+.github/
+*.md
+.git/
+.env
+firebase-credentials.json
