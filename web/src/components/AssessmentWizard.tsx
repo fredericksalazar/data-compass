@@ -68,7 +68,7 @@ export default function AssessmentWizard() {
   }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/v1/assessments/cmmi/schema')
+    fetch(`${API_URL}/api/v1/assessments/cmmi/schema`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch schema');
         return res.json();
@@ -105,7 +105,7 @@ export default function AssessmentWizard() {
     };
 
     try {
-      const res = await fetch(`${API_URL}/api/v1/assessments/cmmi/calculate', {
+      const res = await fetch(`${API_URL}/api/v1/assessments/cmmi/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
