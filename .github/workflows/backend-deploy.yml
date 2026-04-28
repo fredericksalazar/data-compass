@@ -8,8 +8,7 @@ on:
       - "api/**"
 
 env:
-  IMAGE_URL: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID
-    }}/datacompass-api/app-image:latest
+  IMAGE_URL: us-central1-docker.pkg.dev/${{secrets.GCP_PROJECT_ID}}/datacompass-api/app-image:latest
 
 jobs:
   deploy:

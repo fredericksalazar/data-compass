@@ -14,3 +14,5 @@ app.add_middleware(
 )
 
 app.include_router(cmmi.router, prefix="/api/v1", tags=["cmmi"])
+
+print("API deployed successfully")
