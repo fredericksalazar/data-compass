@@ -1,5 +1,6 @@
 fastapi
-uvicorn
+uvicorn[standard]
 pydantic
+pydantic-settings
 firebase-admin
 python-dotenv

@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -15,4 +16,7 @@ app.add_middleware(
 
 app.include_router(cmmi.router, prefix="/api/v1", tags=["cmmi"])
 
-print("API deployed successfully")
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=port)
