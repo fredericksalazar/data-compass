@@ -226,22 +226,22 @@ export default function AssessmentWizard() {
 
   if (showReport && result) {
     return (
-      <>
-        <ResultDashboard result={result} />
-        <div className="bg-slate-950 border-t border-slate-800/60 px-4 py-16">
-          <div className="mx-auto max-w-md text-center">
-            <p className="text-xs font-medium uppercase tracking-widest text-slate-500 mb-4">Acceso libre · Sin publicidad</p>
-            <h3 className="text-xl font-semibold text-white mb-3">¿Te ha servido este diagnóstico?</h3>
-            <p className="text-slate-400 text-sm leading-relaxed mb-8">
-              Esta herramienta es completamente gratuita. Si te ha aportado valor, considera apoyar para mantenerla libre de publicidad.
+      <ResultDashboard
+        result={result}
+        donationSlot={
+          <div className="text-center">
+            <p className="text-xs font-medium uppercase tracking-widest text-slate-500 mb-3">Acceso libre · Sin publicidad</p>
+            <h3 className="text-xl font-semibold text-white mb-2">¿Te ha servido este diagnóstico?</h3>
+            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+              Este diagnóstico CMMI es gratuito, sin anuncios y sin fricciones. Si te ha ayudado a entender mejor la madurez de tus datos, considera apoyar para que sigamos construyendo herramientas de este nivel.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <DonationButtons />
             </div>
-            <p className="mt-6 text-xs text-slate-600">Donación mínima sugerida: $10 USD · 100% voluntario</p>
+            <p className="mt-4 text-xs text-slate-600">Donación mínima sugerida: $10 USD · 100% voluntario</p>
           </div>
-        </div>
-      </>
+        }
+      />
     );
   }
 
