@@ -1,10 +1,12 @@
 import json
+import logging
 from pathlib import Path
 from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException
 from ..models import AssessmentSchema, AssessmentSubmission, AssessmentResult, DomainScore
 from ..core.firebase import db
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 DATA_PATH = Path(__file__).parent.parent.parent / "data" / "cmmi_assessment_v1.json"
@@ -71,23 +73,35 @@ async def calculate_cmmi_assessment(submission: AssessmentSubmission):
     overall_score = round(total_domain_scores_sum / 5, 2)
     
     assessment_id = f"local-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
-    
-    if db:
-        try:
-            doc_ref = db.collection("assessments").document()
-            doc_data = {
-                "lead": submission.lead.model_dump(),
-                "answers": [a.model_dump() for a in submission.answers],
-                "scores": {
-                    "overall_score": overall_score,
-                    "domain_scores": [ds.model_dump() for ds in results_domain_scores]
-                },
-                "created_at": datetime.now(timezone.utc)
-            }
-            doc_ref.set(doc_data)
-            assessment_id = doc_ref.id
-        except Exception as e:
-            print(f"Firestore save failed: {e}")
+
+    if db is None:
+        logger.error("Firebase is not initialized. Data will NOT be saved to Firestore.")
+        logger.error("Check your Firebase credentials configuration in the logs above.")
+        raise HTTPException(
+            status_code=500,
+            detail="Firebase is not available. Please contact support."
+        )
+
+    try:
+        doc_ref = db.collection("assessments").document()
+        doc_data = {
+            "lead": submission.lead.model_dump(),
+            "answers": [a.model_dump() for a in submission.answers],
+            "scores": {
+                "overall_score": overall_score,
+                "domain_scores": [ds.model_dump() for ds in results_domain_scores]
+            },
+            "created_at": datetime.now(timezone.utc)
+        }
+        doc_ref.set(doc_data)
+        assessment_id = doc_ref.id
+        logger.info(f"✅ Assessment saved to Firestore with ID: {assessment_id}")
+    except Exception as e:
+        logger.error(f"Failed to save assessment to Firestore: {type(e).__name__}: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to save assessment: {str(e)}"
+        )
     
     return AssessmentResult(
         assessment_id=assessment_id,

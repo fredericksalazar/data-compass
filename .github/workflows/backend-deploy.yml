@@ -38,4 +38,4 @@ jobs:
             --region us-central1 \
             --allow-unauthenticated \
             --port 8080 \
-            --update-secrets FIREBASE_CREDS_BASE64=firebase-creds:latest
+            --set-secrets FIREBASE_CREDS_BASE64=firebase-creds:latest
