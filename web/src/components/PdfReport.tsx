@@ -1,3 +1,5 @@
+import { CONTACT } from '../config/contact';
+
 /**
  * PdfReport — off-screen component rendered and captured by html2canvas.
  * Each child of <div id="pdf-page-N"> becomes one PDF page.
@@ -537,7 +539,7 @@ function ClosingPage({ result }: { result: AssessmentResult }) {
               <span style={{ fontSize: 16 }}>☕</span>
               <div style={{ textAlign: 'left' }}>
                 <p style={{ fontSize: 11, color: '#1a1a1a', fontWeight: 700 }}>Buy Me a Coffee</p>
-                <p style={{ fontSize: 10, color: '#555' }}>buymeacoffee.com/fredericksalazar</p>
+                <p style={{ fontSize: 10, color: '#555' }}>{CONTACT.BMC_HANDLE}</p>
               </div>
             </div>
             <div style={{
@@ -547,7 +549,7 @@ function ClosingPage({ result }: { result: AssessmentResult }) {
               <span style={{ fontSize: 16, color: 'white' }}>💙</span>
               <div style={{ textAlign: 'left' }}>
                 <p style={{ fontSize: 11, color: 'white', fontWeight: 700 }}>PayPal</p>
-                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.7)' }}>fredefass01@gmail.com · mín. $10 USD</p>
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.7)' }}>{CONTACT.PAYPAL_EMAIL} · mín. $10 USD</p>
               </div>
             </div>
           </div>

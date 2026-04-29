@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { CONTACT } from '../config/contact';
 import PdfReport from './PdfReport';
 import { generatePdf, captureRadarImage } from '../utils/generatePdf';
 import {
@@ -34,6 +35,7 @@ interface AssessmentResult {
 
 interface ResultDashboardProps {
   result: AssessmentResult;
+  leadData?: LeadData;
   donationSlot?: React.ReactNode;
 }
 
@@ -104,16 +106,11 @@ function getDomainInsight(domain: DomainScore): string {
   return `${name} (${s.toFixed(1)}) es una fortaleza consolidada que puede servir como modelo de referencia para elevar los dominios con menor madurez.`;
 }
 
-export default function ResultDashboard({ result, donationSlot }: ResultDashboardProps) {
-  const [lead, setLead] = useState<LeadData | null>(null);
+export default function ResultDashboard({ result, leadData, donationSlot }: ResultDashboardProps) {
+  const [lead] = useState<LeadData | null>(leadData ?? null);
   const [downloading, setDownloading] = useState(false);
   const [radarImageUrl, setRadarImageUrl] = useState('');
   const [showDonationModal, setShowDonationModal] = useState(false);
-
-  useEffect(() => {
-    const stored = sessionStorage.getItem('leadData');
-    if (stored) setLead(JSON.parse(stored));
-  }, []);
 
   const handleDownload = useCallback(async () => {
     setShowDonationModal(true);
@@ -232,7 +229,7 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
             <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">Apoya DataCompass</p>
             <div className="flex flex-col sm:flex-row gap-2 mb-3">
               <a
-                href="https://buymeacoffee.com/fredericksalazar"
+                href={CONTACT.BMC_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#FFDD00] px-4 py-2.5 text-sm font-semibold text-[#1a1a1a] transition-all hover:bg-[#f5d400] hover:scale-105"
@@ -241,7 +238,7 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
                 Invítame a un café
               </a>
               <a
-                href="https://www.paypal.com/donate?business=fredefass01%40gmail.com&amount=10&currency_code=USD"
+                href={CONTACT.PAYPAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#0070ba] px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#005ea6] hover:scale-105"
@@ -618,7 +615,7 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
                 Ir a mi web
               </a>
               <a
-                href="mailto:fsalazars@uoc.edu?subject=Consulta%20sobre%20mi%20diagnóstico%20DataCompass"
+                href={`mailto:${CONTACT.EMAIL}?subject=Consulta%20sobre%20mi%20diagnóstico%20DataCompass`}
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-5 py-3 text-sm font-medium text-white transition-all shadow-md shadow-blue-900/30"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

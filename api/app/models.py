@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import List, Optional
 
 
@@ -32,10 +32,17 @@ class Answer(BaseModel):
 
 
 class Lead(BaseModel):
-    name: str
-    company: str
-    role: str
-    email: str
+    name: str = Field(..., max_length=120)
+    company: str = Field("", max_length=120)
+    role: str = Field("", max_length=120)
+    email: Optional[EmailStr] = Field(None)
+
+    @field_validator('email', mode='before')
+    @classmethod
+    def empty_str_to_none(cls, v: object) -> object:
+        if v == '':
+            return None
+        return v
 
 
 class AssessmentSubmission(BaseModel):

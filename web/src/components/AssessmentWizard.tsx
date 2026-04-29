@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ResultDashboard from './ResultDashboard';
 import LeadFormModal from './LeadFormModal';
+import { CONTACT } from '../config/contact';
 
 interface Option {
   level: number;
@@ -73,7 +74,7 @@ function DonationButtons() {
   return (
     <>
       <a
-        href="https://buymeacoffee.com/fredericksalazar"
+        href={CONTACT.BMC_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-2.5 rounded-xl bg-[#FFDD00] px-5 py-3 text-sm font-semibold text-[#1a1a1a] transition-all hover:bg-[#f5d400] hover:scale-105 active:scale-100 shadow-lg shadow-yellow-500/20"
@@ -82,7 +83,7 @@ function DonationButtons() {
         Invítame a un café
       </a>
       <a
-        href="https://www.paypal.com/donate?business=fredefass01%40gmail.com&amount=10&currency_code=USD"
+        href={CONTACT.PAYPAL_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-2.5 rounded-xl bg-[#0070ba] px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-[#005ea6] hover:scale-105 active:scale-100 shadow-lg shadow-blue-900/30"
@@ -241,22 +242,11 @@ export default function AssessmentWizard() {
     );
   }
 
-  if (showReport) {
-    const storedResult = sessionStorage.getItem('assessmentResult');
-    const resultFromStorage = storedResult ? JSON.parse(storedResult) as AssessmentResult : null;
-    
-    if (!resultFromStorage) {
-      return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 gap-4">
-          <div className="h-8 w-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-          <p className="text-slate-400 text-sm">Cargando resultados...</p>
-        </div>
-      );
-    }
-
+  if (showReport && result) {
     return (
       <ResultDashboard
-        result={resultFromStorage}
+        result={result}
+        leadData={leadData ?? undefined}
         donationSlot={
           <div className="text-center">
             <p className="text-xs font-medium uppercase tracking-widest text-slate-500 mb-3">Acceso libre · Sin publicidad</p>
@@ -319,9 +309,9 @@ export default function AssessmentWizard() {
               <LeadFormModal
                 apiUrl={API_URL}
                 answers={Array.from(pendingAnswers.current.entries()).map(([question_id, level]) => ({ question_id, level }))}
-                onSuccess={async (data) => {
+                onSuccess={(data, apiResult) => {
                   setLeadData(data);
-                  sessionStorage.setItem('leadData', JSON.stringify(data));
+                  setResult(apiResult);
                   setShowModal(false);
                   setShowReport(true);
                 }}

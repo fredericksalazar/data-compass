@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CONTACT } from '../config/contact';
 
 interface LeadData {
   nombre: string;
@@ -12,10 +13,16 @@ interface Answer {
   level: number;
 }
 
+interface AssessmentResult {
+  assessment_id: string;
+  overall_score: number;
+  domain_scores: { domain_name: string; score: number }[];
+}
+
 interface LeadFormModalProps {
   apiUrl: string;
   answers: Answer[];
-  onSuccess: (data: LeadData) => void;
+  onSuccess: (data: LeadData, result: AssessmentResult) => void;
 }
 
 function BmcIcon() {
@@ -85,9 +92,8 @@ export default function LeadFormModal({ apiUrl, answers, onSuccess }: LeadFormMo
         throw new Error('Failed to calculate result');
       }
 
-      const result = await res.json();
-      sessionStorage.setItem('assessmentResult', JSON.stringify(result));
-      onSuccess(formData);
+      const result: AssessmentResult = await res.json();
+      onSuccess(formData, result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
       setLoading(false);
@@ -201,7 +207,7 @@ export default function LeadFormModal({ apiUrl, answers, onSuccess }: LeadFormMo
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
           <a
-            href="https://buymeacoffee.com/fredericksalazar"
+            href={CONTACT.BMC_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#FFDD00] px-4 py-2 text-xs font-semibold text-[#1a1a1a] transition-all hover:bg-[#f5d400] hover:scale-105 active:scale-100"
@@ -210,7 +216,7 @@ export default function LeadFormModal({ apiUrl, answers, onSuccess }: LeadFormMo
             Invítame a un café
           </a>
           <a
-            href="https://www.paypal.com/donate?business=fredefass01%40gmail.com&amount=10&currency_code=USD"
+            href={CONTACT.PAYPAL_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#0070ba] px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-[#005ea6] hover:scale-105 active:scale-100"

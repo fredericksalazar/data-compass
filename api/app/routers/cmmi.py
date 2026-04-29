@@ -1,10 +1,12 @@
 import json
 import logging
+import uuid
 from pathlib import Path
 from datetime import datetime, timezone
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from ..models import AssessmentSchema, AssessmentSubmission, AssessmentResult, DomainScore
 from ..core.firebase import db
+from ..core.limiter import limiter
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -24,7 +26,8 @@ async def get_cmmi_schema():
 
 
 @router.post("/assessments/cmmi/calculate", response_model=AssessmentResult)
-async def calculate_cmmi_assessment(submission: AssessmentSubmission):
+@limiter.limit("10/minute")
+async def calculate_cmmi_assessment(request: Request, submission: AssessmentSubmission):
     if not DATA_PATH.exists():
         raise HTTPException(status_code=404, detail="Schema file not found")
     
@@ -72,7 +75,7 @@ async def calculate_cmmi_assessment(submission: AssessmentSubmission):
     
     overall_score = round(total_domain_scores_sum / 5, 2)
     
-    assessment_id = f"local-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
+    assessment_id = str(uuid.uuid4())
 
     if db is None:
         logger.error("Firebase is not initialized. Data will NOT be saved to Firestore.")
@@ -100,7 +103,7 @@ async def calculate_cmmi_assessment(submission: AssessmentSubmission):
         logger.error(f"Failed to save assessment to Firestore: {type(e).__name__}: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to save assessment: {str(e)}"
+            detail="No se pudo guardar la evaluación. Por favor inténtalo de nuevo."
         )
     
     return AssessmentResult(
