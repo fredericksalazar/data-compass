@@ -7,7 +7,14 @@ interface LeadData {
   correo: string;
 }
 
+interface Answer {
+  question_id: string;
+  level: number;
+}
+
 interface LeadFormModalProps {
+  apiUrl: string;
+  answers: Answer[];
   onSuccess: (data: LeadData) => void;
 }
 
@@ -34,7 +41,7 @@ function PayPalIcon() {
   );
 }
 
-export default function LeadFormModal({ onSuccess }: LeadFormModalProps) {
+export default function LeadFormModal({ apiUrl, answers, onSuccess }: LeadFormModalProps) {
   const [formData, setFormData] = useState<LeadData>({
     nombre: '',
     cargo: '',
@@ -42,19 +49,49 @@ export default function LeadFormModal({ onSuccess }: LeadFormModalProps) {
     correo: '',
   });
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (field: keyof LeadData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.nombre.trim()) {
       setError('Por favor, ingresa tu nombre');
       return;
     }
-    onSuccess(formData);
+
+    setLoading(true);
+    try {
+      const payload = {
+        lead: {
+          name: formData.nombre,
+          company: formData.empresa,
+          role: formData.cargo,
+          email: formData.correo,
+        },
+        answers,
+      };
+
+      const res = await fetch(`${apiUrl}/api/v1/assessments/cmmi/calculate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to calculate result');
+      }
+
+      const result = await res.json();
+      sessionStorage.setItem('assessmentResult', JSON.stringify(result));
+      onSuccess(formData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      setLoading(false);
+    }
   };
 
   return (
@@ -137,12 +174,22 @@ export default function LeadFormModal({ onSuccess }: LeadFormModalProps) {
 
         <button
           type="submit"
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-all shadow-lg shadow-blue-900/30"
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-all shadow-lg shadow-blue-900/30 disabled:opacity-60"
         >
-          Ver mi informe
-          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
+          {loading ? (
+            <>
+              <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+              Procesando...
+            </>
+          ) : (
+            <>
+              Ver mi informe
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </>
+          )}
         </button>
       </form>
 

@@ -212,9 +212,10 @@ export default function AssessmentWizard() {
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('Failed to calculate result');
-      setResult(await res.json());
+      const data = await res.json();
+      return data;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      throw err;
     }
   };
 
@@ -240,10 +241,22 @@ export default function AssessmentWizard() {
     );
   }
 
-  if (showReport && result) {
+  if (showReport) {
+    const storedResult = sessionStorage.getItem('assessmentResult');
+    const resultFromStorage = storedResult ? JSON.parse(storedResult) as AssessmentResult : null;
+    
+    if (!resultFromStorage) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 gap-4">
+          <div className="h-8 w-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+          <p className="text-slate-400 text-sm">Cargando resultados...</p>
+        </div>
+      );
+    }
+
     return (
       <ResultDashboard
-        result={result}
+        result={resultFromStorage}
         donationSlot={
           <div className="text-center">
             <p className="text-xs font-medium uppercase tracking-widest text-slate-500 mb-3">Acceso libre · Sin publicidad</p>
@@ -304,7 +317,9 @@ export default function AssessmentWizard() {
             ) : showLeadForm ? (
               /* Lead form + donation phase */
               <LeadFormModal
-                onSuccess={(data) => {
+                apiUrl={API_URL}
+                answers={Array.from(pendingAnswers.current.entries()).map(([question_id, level]) => ({ question_id, level }))}
+                onSuccess={async (data) => {
                   setLeadData(data);
                   sessionStorage.setItem('leadData', JSON.stringify(data));
                   setShowModal(false);
