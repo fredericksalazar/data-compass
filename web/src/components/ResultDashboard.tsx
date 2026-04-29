@@ -108,6 +108,7 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
   const [lead, setLead] = useState<LeadData | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [radarImageUrl, setRadarImageUrl] = useState('');
+  const [showDonationModal, setShowDonationModal] = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem('leadData');
@@ -115,11 +116,15 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
   }, []);
 
   const handleDownload = useCallback(async () => {
+    setShowDonationModal(true);
+  }, []);
+
+  const triggerPdfDownload = useCallback(async () => {
+    setShowDonationModal(false);
     setDownloading(true);
     try {
       const img = captureRadarImage();
       setRadarImageUrl(img);
-      // Wait for radarImageUrl state to propagate to PdfReport
       await new Promise(r => setTimeout(r, 200));
       const empresa = lead?.empresa?.replace(/\s+/g, '-') || 'Reporte';
       await generatePdf(`DataCompass-${empresa}.pdf`);
@@ -204,6 +209,71 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
 
   return (
     <>
+    {/* ── Donation modal before PDF download ───────────────────────────── */}
+    {showDonationModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm px-4">
+        <div className="w-full max-w-md rounded-2xl border border-slate-700/60 bg-slate-900 shadow-2xl p-8">
+          <div className="flex items-center justify-center mb-5">
+            <div className="h-14 w-14 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center">
+              <svg className="h-7 w-7 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </div>
+          </div>
+
+          <h3 className="text-xl font-bold text-white text-center mb-1">Descarga tu informe</h3>
+          <p className="text-slate-400 text-sm text-center leading-relaxed mb-6">
+            Tu diagnóstico CMMI es gratuito y sin anuncios. Si te ha sido útil, considera apoyar el proyecto antes de descargar.
+          </p>
+
+          <div className="rounded-xl border border-slate-700/50 bg-slate-800/40 p-5 mb-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">Apoya DataCompass</p>
+            <div className="flex flex-col sm:flex-row gap-2 mb-3">
+              <a
+                href="https://buymeacoffee.com/fredericksalazar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#FFDD00] px-4 py-2.5 text-sm font-semibold text-[#1a1a1a] transition-all hover:bg-[#f5d400] hover:scale-105"
+              >
+                <svg width="18" height="18" viewBox="0 0 884 884" fill="none"><circle cx="442" cy="442" r="442" fill="#FFDD00"/><rect x="220" y="310" width="444" height="220" rx="30" fill="white"/><line x1="308" y1="370" x2="308" y2="470" stroke="#0D0C22" strokeWidth="36" strokeLinecap="round"/><line x1="392" y1="370" x2="392" y2="470" stroke="#0D0C22" strokeWidth="36" strokeLinecap="round"/><line x1="578" y1="370" x2="578" y2="420" stroke="#0D0C22" strokeWidth="36" strokeLinecap="round"/><line x1="492" y1="370" x2="492" y2="420" stroke="#0D0C22" strokeWidth="36" strokeLinecap="round"/><path d="M442 470 C442 492 458 508 476 508 C494 508 510 492 510 470H442Z" fill="#0D0C22"/><line x1="442" y1="370" x2="442" y2="420" stroke="#0D0C22" strokeWidth="36" strokeLinecap="round"/></svg>
+                Invítame a un café
+              </a>
+              <a
+                href="https://www.paypal.com/donate?business=fredefass01%40gmail.com&amount=10&currency_code=USD"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#0070ba] px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#005ea6] hover:scale-105"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/></svg>
+                Donar con PayPal
+              </a>
+            </div>
+            <p className="text-xs text-slate-600 text-center">Sugerido: $10 USD · 100% voluntario</p>
+          </div>
+
+          <button
+            onClick={triggerPdfDownload}
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-all shadow-lg shadow-blue-900/30"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Descargar PDF ahora
+          </button>
+          <button
+            onClick={() => setShowDonationModal(false)}
+            className="w-full mt-2 text-sm text-slate-600 hover:text-slate-400 transition-colors py-2"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    )}
+
     <div className="min-h-screen flex flex-col bg-slate-950">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-6 lg:px-8 h-16 border-b border-slate-800 flex-shrink-0">
@@ -319,7 +389,7 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
           </div>
 
           {/* CMMI Roadmap */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 overflow-hidden">
+          <div className="rounded-xl border border-slate-800 bg-slate-900 p-8" style={{ isolation: 'isolate' }}>
             <div className="flex items-center gap-2 mb-2">
               <svg className="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M3 17l4-8 4 4 4-6 4 10"/>
@@ -328,87 +398,106 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
             </div>
             <p className="text-slate-500 text-sm mb-10">Así es el camino desde donde estás hasta la madurez total en gobernanza de datos.</p>
 
-            {/* Mountain path */}
-            <div className="relative">
-              {/* SVG mountain silhouette background */}
-              <svg className="absolute inset-0 w-full h-full opacity-5 pointer-events-none" viewBox="0 0 800 160" preserveAspectRatio="none">
-                <polygon points="0,160 120,90 240,110 360,50 480,70 600,20 720,40 800,10 800,160" fill="white"/>
-              </svg>
+            {/* Steps — bars + labels separated into two independent rows */}
+            {(() => {
+              const LEVELS = [
+                { n: 1, name: 'Inicial',    range: '< 2.0',     color: '#ef4444' },
+                { n: 2, name: 'Gestionado', range: '2.0 – 2.9', color: '#f97316' },
+                { n: 3, name: 'Definido',   range: '3.0 – 3.9', color: '#eab308' },
+                { n: 4, name: 'Medido',     range: '4.0 – 4.4', color: '#22c55e' },
+                { n: 5, name: 'Optimizado', range: '≥ 4.5',     color: '#06b6d4' },
+              ];
+              const barHeights = [48, 80, 112, 144, 192]; // px
 
-              {/* Steps */}
-              <div className="relative flex items-end gap-2 lg:gap-3 h-48">
-                {[
-                  { n: 1, name: 'Inicial',     range: '< 2.0',      color: '#ef4444', desc: 'Procesos reactivos sin estrategia formal' },
-                  { n: 2, name: 'Gestionado',  range: '2.0 – 2.9',  color: '#f97316', desc: 'Procesos básicos sin coordinación' },
-                  { n: 3, name: 'Definido',    range: '3.0 – 3.9',  color: '#f97316', desc: 'Políticas documentadas, adopción parcial' },
-                  { n: 4, name: 'Medido',      range: '4.0 – 4.4',  color: '#22c55e', desc: 'Procesos controlados con métricas' },
-                  { n: 5, name: 'Optimizado',  range: '≥ 4.5',      color: '#06b6d4', desc: 'Mejora continua institucionalizada' },
-                ].map((lvl, i) => {
-                  const isCurrent = lvl.n === levelNumber;
-                  const isPast    = lvl.n < levelNumber;
-                  const heights   = ['h-16', 'h-24', 'h-32', 'h-40', 'h-48'];
-                  return (
-                    <div key={lvl.n} className="flex-1 flex flex-col items-center gap-0 relative" style={{ height: '100%', justifyContent: 'flex-end' }}>
+              return (
+                <>
+                  {/* Bar chart row */}
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 200, position: 'relative' }}>
+                    {LEVELS.map((lvl, i) => {
+                      const isCurrent = lvl.n === levelNumber;
+                      const isPast = lvl.n < levelNumber;
+                      const barH = barHeights[i];
 
-                      {/* "Estás aquí" pin */}
-                      {isCurrent && (
-                        <div className="absolute -top-1 flex flex-col items-center z-10 animate-bounce">
-                          <span className="text-xs font-bold whitespace-nowrap px-2 py-0.5 rounded-full text-white mb-1"
-                            style={{ background: lvl.color, fontSize: 10 }}>
-                            Estás aquí
-                          </span>
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill={lvl.color}>
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                          </svg>
+                      const bgColor = isCurrent
+                        ? lvl.color + '55'
+                        : isPast
+                        ? lvl.color + '33'
+                        : 'rgba(30,41,59,0.6)';
+
+                      const borderColor = isCurrent
+                        ? lvl.color
+                        : isPast
+                        ? lvl.color + '80'
+                        : 'rgba(100,116,139,0.3)';
+
+                      return (
+                        <div key={lvl.n} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '100%', position: 'relative' }}>
+                          {/* "Estás aquí" pin — outside the bar, above it */}
+                          {isCurrent && (
+                            <div className="animate-bounce" style={{ position: 'absolute', bottom: barH + 6, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', willChange: 'transform' }}>
+                              <span style={{ fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap', padding: '2px 8px', borderRadius: 999, color: 'white', background: lvl.color, marginBottom: 4, display: 'block' }}>
+                                Estás aquí
+                              </span>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill={lvl.color}>
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                              </svg>
+                            </div>
+                          )}
+
+                          {/* Bar */}
+                          <div style={{
+                            width: '100%',
+                            height: barH,
+                            background: bgColor,
+                            border: `1px solid ${borderColor}`,
+                            borderBottom: 'none',
+                            borderRadius: '6px 6px 0 0',
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            justifyContent: 'center',
+                            paddingTop: 8,
+                          }}>
+                            <div style={{
+                              width: 28,
+                              height: 28,
+                              borderRadius: '50%',
+                              background: isCurrent ? lvl.color : isPast ? lvl.color + '40' : 'rgba(100,116,139,0.2)',
+                              color: isCurrent ? '#fff' : isPast ? lvl.color : '#64748b',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: 11,
+                              fontWeight: 700,
+                            }}>
+                              {isPast ? '✓' : lvl.n}
+                            </div>
+                          </div>
                         </div>
-                      )}
+                      );
+                    })}
+                  </div>
 
-                      {/* Bar */}
-                      <div
-                        className={`w-full ${heights[i]} rounded-t-lg flex items-start justify-center pt-2 transition-all relative`}
-                        style={{
-                          background: isCurrent
-                            ? `linear-gradient(180deg, ${lvl.color}33, ${lvl.color}15)`
-                            : isPast
-                            ? `linear-gradient(180deg, ${lvl.color}22, ${lvl.color}08)`
-                            : 'rgba(30,41,59,0.5)',
-                          border: `1px solid ${isCurrent ? lvl.color + '60' : isPast ? lvl.color + '30' : 'rgba(148,163,184,0.1)'}`,
-                          borderBottom: 'none',
-                          opacity: !isPast && !isCurrent ? 0.45 : 1,
-                        }}
-                      >
-                        {/* Level number */}
-                        <div
-                          className="h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold"
-                          style={{
-                            background: isCurrent ? lvl.color : isPast ? lvl.color + '30' : 'rgba(148,163,184,0.1)',
-                            color: isCurrent ? 'white' : isPast ? lvl.color : '#475569',
-                          }}
-                        >
-                          {isPast ? (
-                            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                              <path d="M20 6L9 17l-5-5"/>
-                            </svg>
-                          ) : lvl.n}
+                  {/* Divider */}
+                  <div style={{ height: 1, background: 'rgba(100,116,139,0.2)', margin: '0 0 8px' }} />
+
+                  {/* Labels row — completely separate from the bars */}
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    {LEVELS.map((lvl) => {
+                      const isCurrent = lvl.n === levelNumber;
+                      const isPast = lvl.n < levelNumber;
+                      return (
+                        <div key={lvl.n} style={{ flex: 1, textAlign: 'center', padding: '0 2px' }}>
+                          <p style={{ fontSize: 11, fontWeight: 600, lineHeight: 1.2, color: isCurrent ? lvl.color : isPast ? '#64748b' : '#334155', margin: 0 }}>
+                            {lvl.name}
+                          </p>
+                          <p style={{ fontSize: 9, color: '#475569', marginTop: 2 }}>{lvl.range}</p>
                         </div>
-                      </div>
-
-                      {/* Label below */}
-                      <div className="text-center mt-2 px-1">
-                        <p className="text-xs font-semibold leading-tight"
-                          style={{ color: isCurrent ? lvl.color : isPast ? '#64748b' : '#334155' }}>
-                          {lvl.name}
-                        </p>
-                        <p className="text-slate-600 mt-0.5" style={{ fontSize: 9 }}>{lvl.range}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Path line */}
-              <div className="mt-1 h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
-            </div>
+                      );
+                    })}
+                  </div>
+                </>
+              );
+            })()}
 
             {/* Current level detail */}
             <div className="mt-8 rounded-lg p-4 flex items-start gap-4"
@@ -500,36 +589,53 @@ export default function ResultDashboard({ result, donationSlot }: ResultDashboar
             <p className="text-xs text-slate-600">ID de evaluación: {result.assessment_id}</p>
           </div>
 
+          {/* Author / contact block */}
+          <div className="rounded-xl border border-slate-700/60 bg-slate-900 p-8">
+            <div className="flex items-start gap-5 mb-6">
+              <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-base font-bold flex-shrink-0 shadow-lg shadow-blue-900/40">
+                FS
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-1">
+                  ¿Tienes dudas o quieres profundizar en algún aspecto de tu diagnóstico?
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Soy Frederick, Senior Data Engineer &amp; Architect con +8 años trabajando en datos en algunas de las empresas más grandes de LATAM — y el creador de esta herramienta. Si tienes preguntas sobre tus resultados o quieres conversar sobre el estado de madurez de tu organización, estoy disponible.
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a
+                href="https://fredericksalazar.github.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-600 bg-slate-800 hover:bg-slate-700 px-5 py-3 text-sm font-medium text-slate-200 transition-all hover:border-slate-500"
+              >
+                <svg className="h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 3c-1.5 3-2 5.5-2 9s.5 6 2 9M12 3c1.5 3 2 5.5 2 9s-.5 6-2 9M3 12h18"/>
+                </svg>
+                Ir a mi web
+              </a>
+              <a
+                href="mailto:fsalazars@uoc.edu?subject=Consulta%20sobre%20mi%20diagnóstico%20DataCompass"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-5 py-3 text-sm font-medium text-white transition-all shadow-md shadow-blue-900/30"
+              >
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                Escríbeme
+              </a>
+            </div>
+          </div>
+
           {/* Donation slot */}
           {donationSlot && (
             <div className="rounded-xl border border-slate-800 bg-slate-900 px-8 py-10">
               {donationSlot}
             </div>
           )}
-
-          {/* Author note */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 px-7 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <div className="h-11 w-11 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-              FS
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-slate-300 text-sm leading-relaxed">
-                <span className="text-white font-medium">¿Tienes dudas o quieres profundizar en algún aspecto de tu diagnóstico?</span>
-                {' '}Soy Frederick, Senior Data Engineer & Architect con +8 años trabajando en datos en algunas de las empresas más grandes de LATAM — y el creador de esta herramienta. Con gusto puedo orientarte.
-              </p>
-            </div>
-            <a
-              href="https://fredericksalazar.github.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 transition-colors font-medium"
-            >
-              Contáctame
-              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
 
           {/* CTA Premium */}
           <div className="rounded-xl border border-blue-500/20 bg-gradient-to-br from-slate-900 via-blue-950/30 to-slate-900 p-10 text-center relative overflow-hidden">

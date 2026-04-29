@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import ResultDashboard from './ResultDashboard';
+import LeadFormModal from './LeadFormModal';
 
 interface Option {
   level: number;
@@ -93,6 +94,13 @@ function DonationButtons() {
   );
 }
 
+interface LeadData {
+  nombre: string;
+  cargo: string;
+  empresa: string;
+  correo: string;
+}
+
 export default function AssessmentWizard() {
   const [schema, setSchema] = useState<AssessmentSchema | null>(null);
   const [loading, setLoading] = useState(true);
@@ -100,15 +108,18 @@ export default function AssessmentWizard() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Map<string, number>>(new Map());
   const [result, setResult] = useState<AssessmentResult | null>(null);
+  const [leadData, setLeadData] = useState<LeadData | null>(null);
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [barProgress, setBarProgress] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
   const [modalReady, setModalReady] = useState(false);
+  const [showLeadForm, setShowLeadForm] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const apiDone = useRef(false);
   const timerDone = useRef(false);
+  const pendingAnswers = useRef<Map<string, number>>(new Map());
 
   const allQuestions = schema?.domains.flatMap(d => d.questions) ?? [];
   const currentQuestion = allQuestions[currentIndex];
@@ -137,7 +148,10 @@ export default function AssessmentWizard() {
   }, []);
 
   const checkBothDone = () => {
-    if (apiDone.current && timerDone.current) setModalReady(true);
+    if (apiDone.current && timerDone.current) {
+      setModalReady(true);
+      setShowLeadForm(true);
+    }
   };
 
   const handleSelect = (level: number) => {
@@ -153,7 +167,8 @@ export default function AssessmentWizard() {
     }
   };
 
-  const submitAssessment = async (finalAnswers: Map<string, number>) => {
+  const submitAssessment = (finalAnswers: Map<string, number>) => {
+    pendingAnswers.current = finalAnswers;
     apiDone.current = false;
     timerDone.current = false;
     setBarProgress(0);
@@ -161,7 +176,7 @@ export default function AssessmentWizard() {
     setModalReady(false);
     setShowModal(true);
 
-    // Animated progress bar over MODAL_DURATION
+    // Animated progress bar over MODAL_DURATION — API call happens after lead form
     const startTime = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
@@ -175,15 +190,19 @@ export default function AssessmentWizard() {
       }
     }, 80);
 
-    const leadData = JSON.parse(sessionStorage.getItem('leadData') || '{}');
+    // Mark API as done immediately so timer drives the gate
+    apiDone.current = true;
+  };
+
+  const submitToApi = async (lead: LeadData) => {
     const payload = {
       lead: {
-        name: leadData.nombre || '',
-        company: leadData.empresa || '',
-        role: leadData.cargo || '',
-        email: leadData.correo || '',
+        name: lead.nombre,
+        company: lead.empresa,
+        role: lead.cargo,
+        email: lead.correo,
       },
-      answers: Array.from(finalAnswers.entries()).map(([question_id, level]) => ({ question_id, level })),
+      answers: Array.from(pendingAnswers.current.entries()).map(([question_id, level]) => ({ question_id, level })),
     };
 
     try {
@@ -196,9 +215,6 @@ export default function AssessmentWizard() {
       setResult(await res.json());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      apiDone.current = true;
-      checkBothDone();
     }
   };
 
@@ -254,7 +270,7 @@ export default function AssessmentWizard() {
       {/* ── Processing modal overlay ─────────────────────────────────────── */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm px-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-700/60 bg-slate-900 shadow-2xl overflow-hidden">
+          <div className="w-full max-w-md rounded-2xl border border-slate-700/60 bg-slate-900 shadow-2xl">
 
             {!modalReady ? (
               /* Processing phase */
@@ -285,47 +301,17 @@ export default function AssessmentWizard() {
                 </div>
                 <p className="text-xs text-slate-600">{Math.round(barProgress)}% completado</p>
               </div>
-            ) : (
-              /* Ready phase */
-              <div className="px-8 py-10 text-center">
-                {/* Success icon */}
-                <div className="flex items-center justify-center mb-6">
-                  <div className="h-16 w-16 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center">
-                    <svg className="h-8 w-8 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M20 6L9 17l-5-5"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <h3 className="text-xl font-bold text-white mb-2">¡Tu informe está listo!</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-8">
-                  Hemos analizado tus respuestas y generado tu diagnóstico de madurez de datos.
-                </p>
-
-                {/* Donation ask */}
-                <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-5 mb-6 text-left">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-2">Apoya DataCompass</p>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-4">
-                    Este diagnóstico CMMI es gratuito, sin anuncios y sin fricciones. Si te ha ayudado a entender mejor la madurez de tus datos, considera apoyar para que sigamos construyendo herramientas de este nivel.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <DonationButtons />
-                  </div>
-                  <p className="mt-3 text-xs text-slate-600">Sugerido: $10 USD · 100% voluntario</p>
-                </div>
-
-                {/* CTA */}
-                <button
-                  onClick={() => { setShowModal(false); setShowReport(true); }}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 px-6 py-3.5 text-sm font-semibold text-white transition-all shadow-lg shadow-blue-900/30"
-                >
-                  Ver mi informe
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                  </svg>
-                </button>
-              </div>
-            )}
+            ) : showLeadForm ? (
+              /* Lead form + donation phase */
+              <LeadFormModal
+                onSuccess={(data) => {
+                  setLeadData(data);
+                  sessionStorage.setItem('leadData', JSON.stringify(data));
+                  setShowModal(false);
+                  setShowReport(true);
+                }}
+              />
+            ) : null}
           </div>
         </div>
       )}
