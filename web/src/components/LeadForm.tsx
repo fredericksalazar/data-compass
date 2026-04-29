@@ -1,16 +1,5 @@
 import { useState } from 'react';
 
-const BLACKLISTED_DOMAINS = [
-  'gmail.com',
-  'hotmail.com',
-  'yahoo.com',
-  'outlook.com',
-  'live.com',
-  'msn.com',
-  'icloud.com',
-  'aol.com',
-];
-
 interface LeadFormProps {
   onSuccess: (leadData: LeadData) => void;
 }
@@ -31,16 +20,6 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
   });
   const [error, setError] = useState<string | null>(null);
 
-  const getDomain = (email: string) => {
-    const parts = email.split('@');
-    return parts.length > 1 ? parts[1].toLowerCase() : '';
-  };
-
-  const isCorporateEmail = (email: string) => {
-    const domain = getDomain(email);
-    return domain && !BLACKLISTED_DOMAINS.includes(domain);
-  };
-
   const handleChange = (field: keyof LeadData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setError(null);
@@ -52,15 +31,12 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
       setError('Por favor, completa todos los campos');
       return;
     }
-    if (!isCorporateEmail(formData.correo)) {
-      setError('Por favor, utiliza un correo corporativo válido');
-      return;
-    }
+
     sessionStorage.setItem('leadData', JSON.stringify(formData));
     onSuccess(formData);
   };
 
-  const isValid = formData.nombre && formData.cargo && formData.empresa && formData.correo && isCorporateEmail(formData.correo);
+  const isValid = formData.nombre && formData.cargo && formData.empresa && formData.correo;
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950">
@@ -89,7 +65,7 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">Registra tu empresa</h1>
             <p className="text-slate-400 text-base leading-relaxed">
-              Solo correo corporativo. Tus datos son confidenciales y se usan únicamente para personalizar tu informe.
+              Tus datos son confidenciales y se usan únicamente para personalizar tu informe.
             </p>
           </div>
 
