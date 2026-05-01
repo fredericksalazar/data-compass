@@ -1,0 +1,119 @@
+@reference "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Hero canvas ──────────────────────────────────────── */
+#hero-canvas { display: block; }
+
+/* ── Scroll hint ──────────────────────────────────────── */
+#scroll-hint { transition: opacity 0.5s; }
+#scroll-hint.hidden-hint { opacity: 0; pointer-events: none; }
+#scroll-hint svg { animation: bounce-gentle 1.8s ease-in-out infinite; }
+
+/* ── Pulse animation class ────────────────────────────── */
+.pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+/* ── Navbar — Glassmorphism (light + dark) ────────────── */
+#navbar.scrolled {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgb(255 255 255 / 0.88);
+  border-bottom: 1px solid rgb(226 232 240);
+  box-shadow: 0 4px 24px rgb(0 0 0 / 0.06);
+}
+
+.dark #navbar.scrolled {
+  background-color: rgb(2 6 23 / 0.90);
+  border-bottom-color: rgb(30 41 59);
+  box-shadow: 0 4px 24px rgb(0 0 0 / 0.4);
+}
+
+/* ── Buttons ──────────────────────────────────────────── */
+.btn-primary {
+  @apply inline-flex justify-center rounded-md bg-blue-600 px-4 py-2
+         text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors;
+}
+
+.btn-primary-lg {
+  @apply inline-flex justify-center rounded-md bg-blue-600 px-7 py-3
+         text-base font-semibold text-white shadow-lg hover:bg-blue-700 transition-colors;
+}
+
+.btn-secondary-lg {
+  @apply inline-flex justify-center rounded-md border border-slate-300 dark:border-slate-600
+         bg-white/80 dark:bg-slate-800/50 px-7 py-3 text-base font-semibold
+         text-slate-700 dark:text-slate-200
+         hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors;
+}
+
+.btn-cta {
+  @apply inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500
+         px-6 py-3 text-sm font-semibold text-white transition-all
+         shadow-lg shadow-blue-900/30;
+}
+
+/* ── Badges ───────────────────────────────────────────── */
+.hero-badge {
+  @apply inline-flex items-center gap-2 rounded-full border border-blue-500/30
+         bg-blue-50 dark:bg-blue-500/10 px-4 py-1.5 text-sm
+         text-blue-700 dark:text-blue-300 mb-8;
+}
+
+.section-badge {
+  @apply inline-flex items-center gap-2 rounded-full border border-blue-500/30
+         bg-blue-50 dark:bg-blue-500/10 px-4 py-1.5 text-sm
+         text-blue-700 dark:text-blue-300 mb-5;
+}
+
+/* ── Hero vignette overlay ────────────────────────────── */
+.hero-vignette {
+  @apply absolute inset-0 pointer-events-none;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgb(15 23 42 / 0.15) 100%);
+}
+
+.dark .hero-vignette {
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgb(2 6 23 / 0.8) 100%);
+}
+
+/* ── Feature list check icon ──────────────────────────── */
+.feature-check-icon {
+  @apply mt-0.5 h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0;
+}
+
+/* ── Product preview frames ───────────────────────────── */
+.preview-frame {
+  @apply rounded-2xl border border-slate-200 dark:border-slate-700/60
+         bg-white dark:bg-slate-900 overflow-hidden shadow-xl dark:shadow-2xl;
+}
+
+.preview-titlebar {
+  @apply flex items-center gap-1.5 px-4 py-2.5
+         bg-slate-50 dark:bg-slate-800/80
+         border-b border-slate-200 dark:border-slate-700/50;
+}
+
+/* ── Domain cards ─────────────────────────────────────── */
+.domain-card {
+  @apply rounded-xl border border-slate-200 dark:border-slate-700
+         bg-white dark:bg-slate-800/60 p-6 text-center
+         hover:border-blue-500/50 hover:bg-slate-50 dark:hover:bg-slate-800
+         transition-all duration-200;
+}
+
+.domain-card__icon {
+  @apply h-12 w-12 rounded-xl bg-blue-500/10 border border-blue-500/20
+         flex items-center justify-center mx-auto mb-4 transition-all duration-200;
+}
+
+.domain-card:hover .domain-card__icon {
+  @apply border-blue-500/40;
+}
+
+/* ── Pain point cards ─────────────────────────────────── */
+.pain-card {
+  @apply rounded-xl border border-slate-200 dark:border-slate-800
+         bg-white dark:bg-slate-900 p-8;
+}
+
+.pain-card__icon {
+  @apply h-12 w-12 rounded-xl flex items-center justify-center mb-6;
+}

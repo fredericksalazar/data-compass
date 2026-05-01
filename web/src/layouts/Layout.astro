@@ -12,7 +12,7 @@ interface Props {
 const {
   title,
   description = 'Evalúa la madurez de tu gobernanza de datos con DataCompass. Modelo CMMI, diagnóstico ejecutivo y hoja de ruta estratégica.',
-  bodyClass = 'bg-slate-50',
+  bodyClass = '',
   image = '/og-image.svg'
 } = Astro.props;
 ---
@@ -30,6 +30,22 @@ const {
 
     <SEO title={title} description={description} image={image} />
 
+    <!-- Anti-FOUC: apply dark class before first paint -->
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (stored === 'dark' || (!stored && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+
+    <!-- Inter — Geometric Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FDT0PC5TBQ"></script>
     <script is:inline>
@@ -40,8 +56,6 @@ const {
     </script>
 
     <!-- Preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://www.google-analytics.com" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   </head>

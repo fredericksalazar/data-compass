@@ -1,1 +1,87 @@
 @import "tailwindcss";
+@import "./animations.css";
+
+/* ── Tailwind v4: class-based dark mode ───────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Design Tokens ────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg:            #ffffff;
+  --bg-secondary:  #f8fafc;
+  --bg-card:       #ffffff;
+  --bg-muted:      #f1f5f9;
+
+  /* Borders */
+  --border:        #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  /* Text */
+  --text:          #0f172a;
+  --text-2:        #475569;
+  --text-muted:    #94a3b8;
+
+  /* Accent — Cobalt Blue */
+  --accent:        #2563eb;
+  --accent-hover:  #1d4ed8;
+  --accent-muted:  #eff6ff;
+  --accent-border: #bfdbfe;
+  --accent-text:   #1e40af;
+}
+
+.dark {
+  --bg:            #020617;
+  --bg-secondary:  #0f172a;
+  --bg-card:       #0f172a;
+  --bg-muted:      #1e293b;
+
+  --border:        #1e293b;
+  --border-strong: #334155;
+
+  --text:          #f8fafc;
+  --text-2:        #94a3b8;
+  --text-muted:    #475569;
+
+  --accent:        #3b82f6;
+  --accent-hover:  #60a5fa;
+  --accent-muted:  rgba(59, 130, 246, 0.1);
+  --accent-border: rgba(59, 130, 246, 0.3);
+  --accent-text:   #93c5fd;
+}
+
+/* ── Base ─────────────────────────────────────────────── */
+html {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ── ThemeToggle ──────────────────────────────────────── */
+@layer components {
+  .theme-toggle-btn {
+    @reference "tailwindcss";
+    @apply relative h-9 w-9 rounded-full border border-slate-200 bg-white
+           hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900
+           dark:hover:bg-slate-800 transition-all duration-200
+           flex items-center justify-center cursor-pointer
+           text-slate-600 dark:text-slate-300;
+  }
+
+  .theme-toggle-icon {
+    @apply absolute inset-0 flex items-center justify-center
+           transition-all duration-300;
+  }
+
+  .theme-toggle-icon--sun {
+    @apply opacity-100 scale-100 dark:opacity-0 dark:scale-75;
+  }
+
+  .theme-toggle-icon--moon {
+    @apply opacity-0 scale-75 dark:opacity-100 dark:scale-100;
+  }
+}

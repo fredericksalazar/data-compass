@@ -2,6 +2,8 @@ import { useState, useCallback } from 'react';
 import { CONTACT } from '../config/contact';
 import PdfReport from './PdfReport';
 import { generatePdf, captureRadarImage } from '../utils/generatePdf';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../hooks/useTheme';
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -56,9 +58,9 @@ function getLevelNumber(score: number): number {
 }
 
 function getLevelColor(score: number): string {
-  if (score < 2.5) return '#ef4444';   // rojo  — crítico
-  if (score < 3.5) return '#f97316';   // naranja — medio
-  return '#22c55e';                     // verde  — bueno
+  if (score < 2.5) return '#ef4444';
+  if (score < 3.5) return '#f97316';
+  return '#22c55e';
 }
 
 function formatDate(date: Date): string {
@@ -111,6 +113,8 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
   const [downloading, setDownloading] = useState(false);
   const [radarImageUrl, setRadarImageUrl] = useState('');
   const [showDonationModal, setShowDonationModal] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const handleDownload = useCallback(async () => {
     setShowDonationModal(true);
@@ -157,12 +161,12 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
         borderColor: '#60a5fa',
         borderWidth: 2,
         pointBackgroundColor: result.domain_scores.map(d => getLevelColor(d.score)),
-        pointBorderColor: '#0f172a',
+        pointBorderColor: isDark ? '#0f172a' : '#ffffff',
         pointBorderWidth: 2,
         pointRadius: 6,
         pointHoverRadius: 8,
         pointHoverBackgroundColor: result.domain_scores.map(d => getLevelColor(d.score)),
-        pointHoverBorderColor: '#fff',
+        pointHoverBorderColor: isDark ? '#fff' : '#f8fafc',
       },
     ],
   };
@@ -178,41 +182,38 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
         ticks: {
           stepSize: 1,
           backdropColor: 'transparent',
-          color: '#475569',
+          color: isDark ? '#475569' : '#64748b',
         },
         pointLabels: {
-          font: { size: 12, family: 'ui-sans-serif, system-ui, sans-serif', weight: '500' as const },
-          color: '#94a3b8',
+          font: { size: 12, family: 'Inter, ui-sans-serif, system-ui, sans-serif', weight: '500' as const },
+          color: isDark ? '#94a3b8' : '#334155',
         },
-        grid: { color: 'rgba(148,163,184,0.15)' },
-        angleLines: { color: 'rgba(148,163,184,0.15)' },
+        grid: { color: isDark ? 'rgba(148,163,184,0.15)' : 'rgba(15,23,42,0.08)' },
+        angleLines: { color: isDark ? 'rgba(148,163,184,0.15)' : 'rgba(15,23,42,0.08)' },
       },
     },
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#0f172a',
-        borderColor: '#1e293b',
+        backgroundColor: isDark ? '#0f172a' : '#ffffff',
+        borderColor: isDark ? '#1e293b' : '#e2e8f0',
         borderWidth: 1,
         padding: 12,
-        titleColor: '#94a3b8',
-        bodyColor: '#f1f5f9',
+        titleColor: isDark ? '#94a3b8' : '#475569',
+        bodyColor: isDark ? '#f1f5f9' : '#0f172a',
       },
     },
   };
-
-  const circumference = 2 * Math.PI * 45;
-  const dashOffset = circumference - (result.overall_score / 5) * circumference;
 
   return (
     <>
     {/* ── Donation modal before PDF download ───────────────────────────── */}
     {showDonationModal && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm px-4">
-        <div className="w-full max-w-md rounded-2xl border border-slate-700/60 bg-slate-900 shadow-2xl p-8">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-slate-950/90 backdrop-blur-sm px-4">
+        <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-2xl p-8">
           <div className="flex items-center justify-center mb-5">
-            <div className="h-14 w-14 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center">
-              <svg className="h-7 w-7 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <div className="h-14 w-14 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 flex items-center justify-center">
+              <svg className="h-7 w-7 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
                 <polyline points="7 10 12 15 17 10"/>
                 <line x1="12" y1="15" x2="12" y2="3"/>
@@ -220,13 +221,13 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
             </div>
           </div>
 
-          <h3 className="text-xl font-bold text-white text-center mb-1">Descarga tu informe</h3>
-          <p className="text-slate-400 text-sm text-center leading-relaxed mb-6">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white text-center mb-1">Descarga tu informe</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-sm text-center leading-relaxed mb-6">
             Tu diagnóstico CMMI es gratuito y sin anuncios. Si te ha sido útil, considera apoyar el proyecto antes de descargar.
           </p>
 
-          <div className="rounded-xl border border-slate-700/50 bg-slate-800/40 p-5 mb-6">
-            <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">Apoya DataCompass</p>
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/40 p-5 mb-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">Apoya DataCompass</p>
             <div className="flex flex-col sm:flex-row gap-2 mb-3">
               <a
                 href={CONTACT.BMC_URL}
@@ -247,7 +248,7 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                 Donar con PayPal
               </a>
             </div>
-            <p className="text-xs text-slate-600 text-center">Sugerido: $10 USD · 100% voluntario</p>
+            <p className="text-xs text-slate-400 dark:text-slate-600 text-center">Sugerido: $10 USD · 100% voluntario</p>
           </div>
 
           <button
@@ -263,7 +264,7 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
           </button>
           <button
             onClick={() => setShowDonationModal(false)}
-            className="w-full mt-2 text-sm text-slate-600 hover:text-slate-400 transition-colors py-2"
+            className="w-full mt-2 text-sm text-slate-400 dark:text-slate-600 hover:text-slate-700 dark:hover:text-slate-400 transition-colors py-2"
           >
             Cancelar
           </button>
@@ -271,19 +272,20 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
       </div>
     )}
 
-    <div className="min-h-screen flex flex-col bg-slate-950">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-6 lg:px-8 h-16 border-b border-slate-800 flex-shrink-0">
+      <nav className="flex items-center justify-between px-6 lg:px-8 h-16 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
         <a href="/" className="flex items-center gap-2.5">
-          <svg className="h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="9"/>
             <line x1="12" y1="3" x2="12" y2="21"/>
             <line x1="3" y1="12" x2="21" y2="12"/>
             <polyline points="16.5 7.5 12 12 7.5 16.5" strokeWidth="2"/>
           </svg>
-          <span className="text-lg font-bold text-white tracking-tight">Data<span className="text-blue-400">Compass</span></span>
+          <span className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Data<span className="text-blue-600 dark:text-blue-400">Compass</span></span>
         </a>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <button
             onClick={handleDownload}
             disabled={downloading}
@@ -305,23 +307,23 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
               </>
             )}
           </button>
-          <a href="/" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">Volver al inicio</a>
+          <a href="/" className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">Volver al inicio</a>
         </div>
       </nav>
 
-      <div className="flex-1 px-4 py-10 lg:py-16">
+      <div className="flex-1 px-4 py-10 lg:py-16 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto space-y-6">
 
           {/* Header card */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1.5 text-sm text-green-300 mb-6">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-50 dark:bg-green-500/10 px-4 py-1.5 text-sm text-green-700 dark:text-green-300 mb-6">
               <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M20 6L9 17l-5-5"/>
               </svg>
               Evaluación completada
             </div>
-            <h1 className="text-3xl lg:text-4xl font-bold text-white mb-3">
-              Reporte de Madurez: <span className="text-blue-400">{lead?.empresa || 'tu Organización'}</span>
+            <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-3">
+              Reporte de Madurez: <span className="text-blue-600 dark:text-blue-400">{lead?.empresa || 'tu Organización'}</span>
             </h1>
             <p className="text-slate-500 text-sm">
               Preparado para {lead?.nombre || '—'} · {lead?.cargo || '—'} · {currentDate}
@@ -331,12 +333,11 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
           {/* Score + Radar */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Score card */}
-            <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 flex flex-col items-center justify-center">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col items-center justify-center">
               <p className="text-sm font-medium text-slate-500 uppercase tracking-widest mb-6">Puntuación Global</p>
-              {/* Circular gauge */}
               <div className="relative w-48 h-48 mb-6">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(148,163,184,0.1)" strokeWidth="8"/>
+                  <circle cx="50" cy="50" r="45" fill="none" stroke={isDark ? 'rgba(148,163,184,0.1)' : 'rgba(15,23,42,0.06)'} strokeWidth="8"/>
                   <circle
                     cx="50" cy="50" r="45"
                     fill="none"
@@ -348,7 +349,7 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-5xl font-bold text-white">{result.overall_score.toFixed(1)}</span>
+                  <span className="text-5xl font-bold text-slate-900 dark:text-white">{result.overall_score.toFixed(1)}</span>
                   <span className="text-sm text-slate-500">de 5.0</span>
                 </div>
               </div>
@@ -357,13 +358,12 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                 <p className="text-2xl font-bold mt-1" style={{ color: levelColor }}>{levelName}</p>
               </div>
 
-              {/* Domain scores list */}
               <div className="w-full mt-8 space-y-3">
                 {result.domain_scores.map(d => (
                   <div key={d.domain_name} className="flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <p className="text-xs truncate mb-1" style={{ color: getLevelColor(d.score) }}>{d.domain_name}</p>
-                      <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-700"
                           style={{ width: `${(d.score / 5) * 100}%`, backgroundColor: getLevelColor(d.score) }}
@@ -377,7 +377,7 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
             </div>
 
             {/* Radar card */}
-            <div className="lg:col-span-2 rounded-xl border border-slate-800 bg-slate-900 p-8">
+            <div className="lg:col-span-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8">
               <p className="text-sm font-medium text-slate-500 uppercase tracking-widest mb-6">Perfil por Dominio</p>
               <div className="relative w-full h-80 lg:h-96">
                 <Radar data={radarData} options={radarOptions} />
@@ -386,16 +386,15 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
           </div>
 
           {/* CMMI Roadmap */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-8" style={{ isolation: 'isolate' }}>
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8" style={{ isolation: 'isolate' }}>
             <div className="flex items-center gap-2 mb-2">
-              <svg className="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg className="h-5 w-5 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M3 17l4-8 4 4 4-6 4 10"/>
               </svg>
-              <h2 className="text-lg font-semibold text-white">Tu posición en el modelo CMMI</h2>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Tu posición en el modelo CMMI</h2>
             </div>
             <p className="text-slate-500 text-sm mb-10">Así es el camino desde donde estás hasta la madurez total en gobernanza de datos.</p>
 
-            {/* Steps — bars + labels separated into two independent rows */}
             {(() => {
               const LEVELS = [
                 { n: 1, name: 'Inicial',    range: '< 2.0',     color: '#ef4444' },
@@ -404,11 +403,10 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                 { n: 4, name: 'Medido',     range: '4.0 – 4.4', color: '#22c55e' },
                 { n: 5, name: 'Optimizado', range: '≥ 4.5',     color: '#06b6d4' },
               ];
-              const barHeights = [48, 80, 112, 144, 192]; // px
+              const barHeights = [48, 80, 112, 144, 192];
 
               return (
                 <>
-                  {/* Bar chart row */}
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 200, position: 'relative' }}>
                     {LEVELS.map((lvl, i) => {
                       const isCurrent = lvl.n === levelNumber;
@@ -419,17 +417,16 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                         ? lvl.color + '55'
                         : isPast
                         ? lvl.color + '33'
-                        : 'rgba(30,41,59,0.6)';
+                        : isDark ? 'rgba(30,41,59,0.6)' : 'rgba(241,245,249,0.8)';
 
                       const borderColor = isCurrent
                         ? lvl.color
                         : isPast
                         ? lvl.color + '80'
-                        : 'rgba(100,116,139,0.3)';
+                        : isDark ? 'rgba(100,116,139,0.3)' : 'rgba(203,213,225,0.8)';
 
                       return (
                         <div key={lvl.n} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '100%', position: 'relative' }}>
-                          {/* "Estás aquí" pin — outside the bar, above it */}
                           {isCurrent && (
                             <div className="animate-bounce" style={{ position: 'absolute', bottom: barH + 6, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', willChange: 'transform' }}>
                               <span style={{ fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap', padding: '2px 8px', borderRadius: 999, color: 'white', background: lvl.color, marginBottom: 4, display: 'block' }}>
@@ -441,7 +438,6 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                             </div>
                           )}
 
-                          {/* Bar */}
                           <div style={{
                             width: '100%',
                             height: barH,
@@ -458,8 +454,8 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                               width: 28,
                               height: 28,
                               borderRadius: '50%',
-                              background: isCurrent ? lvl.color : isPast ? lvl.color + '40' : 'rgba(100,116,139,0.2)',
-                              color: isCurrent ? '#fff' : isPast ? lvl.color : '#64748b',
+                              background: isCurrent ? lvl.color : isPast ? lvl.color + '40' : isDark ? 'rgba(100,116,139,0.2)' : 'rgba(203,213,225,0.5)',
+                              color: isCurrent ? '#fff' : isPast ? lvl.color : isDark ? '#64748b' : '#94a3b8',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -474,20 +470,18 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                     })}
                   </div>
 
-                  {/* Divider */}
-                  <div style={{ height: 1, background: 'rgba(100,116,139,0.2)', margin: '0 0 8px' }} />
+                  <div style={{ height: 1, background: isDark ? 'rgba(100,116,139,0.2)' : 'rgba(203,213,225,0.8)', margin: '0 0 8px' }} />
 
-                  {/* Labels row — completely separate from the bars */}
                   <div style={{ display: 'flex', gap: 8 }}>
                     {LEVELS.map((lvl) => {
                       const isCurrent = lvl.n === levelNumber;
                       const isPast = lvl.n < levelNumber;
                       return (
                         <div key={lvl.n} style={{ flex: 1, textAlign: 'center', padding: '0 2px' }}>
-                          <p style={{ fontSize: 11, fontWeight: 600, lineHeight: 1.2, color: isCurrent ? lvl.color : isPast ? '#64748b' : '#334155', margin: 0 }}>
+                          <p style={{ fontSize: 11, fontWeight: 600, lineHeight: 1.2, color: isCurrent ? lvl.color : isPast ? (isDark ? '#64748b' : '#94a3b8') : (isDark ? '#334155' : '#cbd5e1'), margin: 0 }}>
                             {lvl.name}
                           </p>
-                          <p style={{ fontSize: 9, color: '#475569', marginTop: 2 }}>{lvl.range}</p>
+                          <p style={{ fontSize: 9, color: isDark ? '#475569' : '#94a3b8', marginTop: 2 }}>{lvl.range}</p>
                         </div>
                       );
                     })}
@@ -496,7 +490,6 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
               );
             })()}
 
-            {/* Current level detail */}
             <div className="mt-8 rounded-lg p-4 flex items-start gap-4"
               style={{ background: `${levelColor}0d`, border: `1px solid ${levelColor}30` }}>
               <div className="h-10 w-10 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0"
@@ -504,12 +497,12 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                 {levelNumber}
               </div>
               <div>
-                <p className="font-semibold text-white">{getLevelName(result.overall_score)} — Nivel {levelNumber}</p>
-                <p className="text-slate-400 text-sm mt-0.5">{LEVEL_CONTEXT[levelNumber].context}</p>
+                <p className="font-semibold text-slate-900 dark:text-white">{getLevelName(result.overall_score)} — Nivel {levelNumber}</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">{LEVEL_CONTEXT[levelNumber].context}</p>
               </div>
               {levelNumber < 5 && (
                 <div className="ml-auto flex-shrink-0 text-right hidden sm:block">
-                  <p className="text-xs text-slate-500 mb-1">Siguiente nivel</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">Siguiente nivel</p>
                   <p className="text-sm font-semibold" style={{ color: levelColor }}>
                     {['Gestionado','Definido','Medido','Optimizado'][levelNumber - 1] ?? ''}
                   </p>
@@ -519,30 +512,28 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
           </div>
 
           {/* Executive Summary */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 space-y-8">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 space-y-8">
             <div className="flex items-center gap-2">
-              <svg className="h-5 w-5 text-blue-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
                 <polyline points="14 2 14 8 20 8"/>
                 <line x1="16" y1="13" x2="8" y2="13"/>
                 <line x1="16" y1="17" x2="8" y2="17"/>
               </svg>
-              <h2 className="text-lg font-semibold text-white">Resumen Ejecutivo</h2>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Resumen Ejecutivo</h2>
             </div>
 
-            {/* Level headline + context */}
-            <div className="rounded-lg border bg-slate-800/40 p-5" style={{ borderColor: `${levelColor}30` }}>
+            <div className="rounded-lg border bg-slate-50 dark:bg-slate-800/40 p-5" style={{ borderColor: `${levelColor}30` }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: levelColor }}>
                 Nivel {levelNumber} · {levelName}
               </p>
-              <p className="text-white font-semibold text-base mb-2">{levelCtx.headline}</p>
-              <p className="text-slate-300 text-sm leading-relaxed mb-3">{levelCtx.context}</p>
-              <p className="text-slate-400 text-sm leading-relaxed border-t border-slate-700 pt-3">{levelCtx.implication}</p>
+              <p className="text-slate-900 dark:text-white font-semibold text-base mb-2">{levelCtx.headline}</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-3">{levelCtx.context}</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed border-t border-slate-200 dark:border-slate-700 pt-3">{levelCtx.implication}</p>
             </div>
 
-            {/* Domain analysis */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">Análisis por dominio</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">Análisis por dominio</p>
               <div className="space-y-3">
                 {result.domain_scores.map(d => (
                   <div key={d.domain_name} className="flex gap-3 items-start">
@@ -550,30 +541,28 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                       className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full"
                       style={{ backgroundColor: getLevelColor(d.score) }}
                     />
-                    <p className="text-slate-300 text-sm leading-relaxed">{getDomainInsight(d)}</p>
+                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{getDomainInsight(d)}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Best / Worst highlight */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-lg border border-green-500/20 bg-green-500/5 p-4">
-                <p className="text-xs font-medium text-green-400 uppercase tracking-wider mb-1">Fortaleza principal</p>
-                <p className="text-white font-semibold">{bestDomain.domain_name}</p>
-                <p className="text-green-400 text-sm font-bold mt-1">{bestDomain.score.toFixed(1)} / 5.0</p>
+              <div className="rounded-lg border border-green-500/20 bg-green-50 dark:bg-green-500/5 p-4">
+                <p className="text-xs font-medium text-green-700 dark:text-green-400 uppercase tracking-wider mb-1">Fortaleza principal</p>
+                <p className="text-slate-900 dark:text-white font-semibold">{bestDomain.domain_name}</p>
+                <p className="text-green-600 dark:text-green-400 text-sm font-bold mt-1">{bestDomain.score.toFixed(1)} / 5.0</p>
               </div>
-              <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
-                <p className="text-xs font-medium text-red-400 uppercase tracking-wider mb-1">Área prioritaria</p>
-                <p className="text-white font-semibold">{worstDomain.domain_name}</p>
-                <p className="text-red-400 text-sm font-bold mt-1">{worstDomain.score.toFixed(1)} / 5.0</p>
+              <div className="rounded-lg border border-red-500/20 bg-red-50 dark:bg-red-500/5 p-4">
+                <p className="text-xs font-medium text-red-700 dark:text-red-400 uppercase tracking-wider mb-1">Área prioritaria</p>
+                <p className="text-slate-900 dark:text-white font-semibold">{worstDomain.domain_name}</p>
+                <p className="text-red-600 dark:text-red-400 text-sm font-bold mt-1">{worstDomain.score.toFixed(1)} / 5.0</p>
               </div>
             </div>
 
-            {/* Strategic recommendation */}
-            <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-blue-400 mb-2">Recomendación estratégica</p>
-              <p className="text-slate-300 text-sm leading-relaxed">
+            <div className="rounded-lg border border-blue-500/20 bg-blue-50 dark:bg-blue-500/5 p-5">
+              <p className="text-xs font-semibold uppercase tracking-widest text-blue-700 dark:text-blue-400 mb-2">Recomendación estratégica</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                 {criticalDomains.length > 0
                   ? `Prioriza un plan de remediación inmediato en ${criticalDomains.map(d => d.domain_name).join(' y ')}. Estas brechas críticas limitan el valor de los avances en el resto de dominios.`
                   : mediumDomains.length > 0
@@ -583,20 +572,20 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
               </p>
             </div>
 
-            <p className="text-xs text-slate-600">ID de evaluación: {result.assessment_id}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-600">ID de evaluación: {result.assessment_id}</p>
           </div>
 
           {/* Author / contact block */}
-          <div className="rounded-xl border border-slate-700/60 bg-slate-900 p-8">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900 p-8">
             <div className="flex items-start gap-5 mb-6">
               <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-base font-bold flex-shrink-0 shadow-lg shadow-blue-900/40">
                 FS
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-1">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-1">
                   ¿Tienes dudas o quieres profundizar en algún aspecto de tu diagnóstico?
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed">
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
                   Soy Frederick, Senior Data Engineer &amp; Architect con +8 años trabajando en datos en algunas de las empresas más grandes de LATAM — y el creador de esta herramienta. Si tienes preguntas sobre tus resultados o quieres conversar sobre el estado de madurez de tu organización, estoy disponible.
                 </p>
               </div>
@@ -606,9 +595,9 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
                 href="https://fredericksalazar.github.io"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-600 bg-slate-800 hover:bg-slate-700 px-5 py-3 text-sm font-medium text-slate-200 transition-all hover:border-slate-500"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 px-5 py-3 text-sm font-medium text-slate-700 dark:text-slate-200 transition-all hover:border-slate-300 dark:hover:border-slate-500"
               >
-                <svg className="h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg className="h-4 w-4 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="12" cy="12" r="9"/>
                   <path d="M12 3c-1.5 3-2 5.5-2 9s.5 6 2 9M12 3c1.5 3 2 5.5 2 9s-.5 6-2 9M3 12h18"/>
                 </svg>
@@ -629,18 +618,18 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
 
           {/* Donation slot */}
           {donationSlot && (
-            <div className="rounded-xl border border-slate-800 bg-slate-900 px-8 py-10">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-8 py-10">
               {donationSlot}
             </div>
           )}
 
           {/* CTA Premium */}
-          <div className="rounded-xl border border-blue-500/20 bg-gradient-to-br from-slate-900 via-blue-950/30 to-slate-900 p-10 text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl pointer-events-none"></div>
-            <h2 className="text-2xl font-bold text-white mb-3">
+          <div className="rounded-xl border border-blue-200 dark:border-blue-500/20 bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-slate-900 dark:via-blue-950/30 dark:to-slate-900 p-10 text-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-blue-400/10 dark:bg-blue-600/5 blur-3xl pointer-events-none"></div>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
               Desbloquea tu Hoja de Ruta Estratégica
             </h2>
-            <p className="text-slate-400 leading-relaxed mb-8 max-w-xl mx-auto">
+            <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8 max-w-xl mx-auto">
               Obtén recomendaciones precisas generadas por IA para llevar tu organización al Nivel 5 de madurez en Gobernanza de Datos.
             </p>
             <a
@@ -649,7 +638,7 @@ export default function ResultDashboard({ result, leadData, donationSlot }: Resu
             >
               Ver Planes Premium →
             </a>
-            <p className="text-xs text-slate-600 mt-4">Plan Pro incluye: informe PDF · benchmarks sectoriales · roadmap priorizado</p>
+            <p className="text-xs text-slate-400 dark:text-slate-600 mt-4">Plan Pro incluye: informe PDF · benchmarks sectoriales · roadmap priorizado</p>
           </div>
 
         </div>

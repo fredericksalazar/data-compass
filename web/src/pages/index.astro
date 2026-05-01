@@ -1,40 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import '../styles/components/home-page.css';
+import ThemeToggle from '../components/ThemeToggle';
 ---
 
 <Layout
   title="DataCompass — Diagnóstico de Madurez de Datos CMMI | Gratis en 10 minutos"
   description="Descubre en 10 minutos el nivel de madurez de datos de tu organización. Evaluación CMMI gratuita en 5 dominios: Gobierno de Datos, Calidad, Arquitectura, Metadatos y Cultura. Informe ejecutivo con recomendación estratégica. Sin registro previo."
-  image="/screenshots/cmmi-roadmap.png"
-  bodyClass="bg-slate-950">
-
-  <style is:global>
-    html { scroll-behavior: smooth; }
-
-    #navbar.scrolled {
-      background-color: rgb(2 6 23 / 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgb(30 41 59);
-      box-shadow: 0 4px 24px rgb(0 0 0 / 0.4);
-    }
-
-    #hero-canvas { display: block; }
-
-    @keyframes bounce-gentle {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(7px); }
-    }
-    #scroll-hint { transition: opacity 0.5s; }
-    #scroll-hint.hidden-hint { opacity: 0; pointer-events: none; }
-    #scroll-hint svg { animation: bounce-gentle 1.8s ease-in-out infinite; }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
-    }
-    .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
-  </style>
+  image="/screenshots/cmmi-roadmap.png">
 
   <!-- ═══════════════════════════════════════════════
        NAVIGATION
@@ -43,59 +16,61 @@ import Layout from '../layouts/Layout.astro';
     <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
       <!-- Logo -->
       <a href="/" class="flex items-center gap-2.5" aria-label="Volver a inicio - DataCompass">
-        <svg class="h-7 w-7 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="h-7 w-7 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="9"/>
           <line x1="12" y1="3" x2="12" y2="21"/>
           <line x1="3" y1="12" x2="21" y2="12"/>
           <polyline points="16.5 7.5 12 12 7.5 16.5" stroke-width="2"/>
         </svg>
-        <span class="text-xl font-bold text-white tracking-tight">Data<span class="text-blue-400">Compass</span></span>
+        <span class="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Data<span class="text-blue-600 dark:text-blue-400">Compass</span></span>
       </a>
 
       <!-- Desktop links -->
-      <div class="hidden md:flex items-center gap-8">
-        <a href="#dominios" class="text-sm text-slate-300 hover:text-white transition-colors">Dominios</a>
-        <a href="/evaluacion"
-           class="inline-flex justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors">
+      <div class="hidden md:flex items-center gap-6">
+        <a href="#dominios" class="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Dominios</a>
+        <ThemeToggle client:load />
+        <a href="/evaluacion" class="btn-primary">
           Iniciar Evaluación
         </a>
       </div>
 
-      <!-- Mobile CTA -->
-      <a href="/evaluacion"
-         class="md:hidden inline-flex justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
-        Evaluar
-      </a>
+      <!-- Mobile actions -->
+      <div class="md:hidden flex items-center gap-3">
+        <ThemeToggle client:load />
+        <a href="/evaluacion" class="btn-primary px-3 py-1.5 text-xs">
+          Evaluar
+        </a>
+      </div>
     </div>
   </nav>
 
   <!-- ═══════════════════════════════════════════════
-       HERO — DARK + 3D CANVAS
+       HERO — CANVAS
   ════════════════════════════════════════════════ -->
-  <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-950">
-    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full" aria-hidden="true"></canvas>
+  <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950">
+    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full opacity-60 dark:opacity-100" aria-hidden="true"></canvas>
 
     <!-- Radial vignette overlay -->
-    <div class="absolute inset-0 bg-radial-[at_50%_50%] from-transparent via-transparent to-slate-950/80 pointer-events-none"></div>
+    <div class="hero-vignette" aria-hidden="true"></div>
 
     <!-- Content -->
     <div class="relative z-10 text-center px-6 max-w-4xl mx-auto pt-16">
       <!-- Badge -->
-      <div class="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-300 mb-8" role="complementary" aria-label="Tipo de evaluación">
-        <span class="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden="true"></span>
+      <div class="hero-badge" role="complementary" aria-label="Tipo de evaluación">
+        <span class="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-500 dark:bg-blue-400" aria-hidden="true"></span>
         Evaluación CMMI &middot; Gobernanza de Datos
       </div>
 
       <!-- Headline -->
-      <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white leading-tight mb-6">
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight mb-6">
         Evaluación de Madurez de Datos<br>
-        <span class="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+        <span class="bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 bg-clip-text text-transparent">
           basada en modelo CMMI
         </span>
       </h1>
 
       <!-- Subline -->
-      <p class="text-lg md:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto mb-10">
+      <p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto mb-10">
         DataCompass evalúa tu organización según el modelo CMMI en 5 dominios críticos
         de gobernanza. En menos de 10 minutos obtienes un diagnóstico ejecutivo con tu
         hoja de ruta de mejora.
@@ -103,19 +78,17 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- CTAs -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/evaluacion"
-           class="inline-flex justify-center rounded-md bg-blue-600 px-7 py-3 text-base font-semibold text-white shadow-lg hover:bg-blue-700 transition-colors">
+        <a href="/evaluacion" class="btn-primary-lg">
           Iniciar Evaluación Gratuita &rarr;
         </a>
-        <a href="#dominios"
-           class="inline-flex justify-center rounded-md border border-slate-600 bg-slate-800/50 px-7 py-3 text-base font-semibold text-slate-200 hover:bg-slate-700/50 transition-colors">
+        <a href="#dominios" class="btn-secondary-lg">
           Ver los dominios
         </a>
       </div>
     </div>
 
     <!-- Scroll hint -->
-    <div id="scroll-hint" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500" aria-hidden="true">
+    <div id="scroll-hint" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-400 dark:text-slate-500" aria-hidden="true">
       <span class="text-xs tracking-widest uppercase">Explorar</span>
       <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
         <path d="M6 9l6 6 6-6"/>
@@ -126,23 +99,23 @@ import Layout from '../layouts/Layout.astro';
   <!-- ═══════════════════════════════════════════════
        STATS STRIP
   ════════════════════════════════════════════════ -->
-  <section class="bg-slate-900 border-y border-slate-800 py-12">
+  <section class="bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 py-12">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
       <div>
-        <div class="text-4xl font-bold text-blue-400 mb-1">25</div>
-        <div class="text-sm text-slate-400">Preguntas estructuradas</div>
+        <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-1">25</div>
+        <div class="text-sm text-slate-500 dark:text-slate-400">Preguntas estructuradas</div>
       </div>
       <div>
-        <div class="text-4xl font-bold text-blue-400 mb-1">5</div>
-        <div class="text-sm text-slate-400">Dominios CMMI evaluados</div>
+        <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-1">5</div>
+        <div class="text-sm text-slate-500 dark:text-slate-400">Dominios CMMI evaluados</div>
       </div>
       <div>
-        <div class="text-4xl font-bold text-blue-400 mb-1">&lt;10</div>
-        <div class="text-sm text-slate-400">Minutos de respuesta</div>
+        <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-1">&lt;10</div>
+        <div class="text-sm text-slate-500 dark:text-slate-400">Minutos de respuesta</div>
       </div>
       <div>
-        <div class="text-4xl font-bold text-blue-400 mb-1">100%</div>
-        <div class="text-sm text-slate-400">Gratuito y sin compromiso</div>
+        <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-1">100%</div>
+        <div class="text-sm text-slate-500 dark:text-slate-400">Gratuito y sin compromiso</div>
       </div>
     </div>
   </section>
@@ -150,33 +123,32 @@ import Layout from '../layouts/Layout.astro';
   <!-- ═══════════════════════════════════════════════
        PRODUCT PREVIEW — alternating rows
   ════════════════════════════════════════════════ -->
-  <section class="py-28 bg-slate-950 overflow-hidden">
+  <section class="py-28 bg-slate-50 dark:bg-slate-950 overflow-hidden">
     <div class="max-w-6xl mx-auto px-6">
 
       <!-- Header -->
       <div class="text-center mb-20">
-        <div class="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-300 mb-5">
-          <span class="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+        <div class="section-badge">
+          <span class="h-1.5 w-1.5 rounded-full bg-blue-500 dark:bg-blue-400 animate-pulse"></span>
           Resultado real · Sin registro previo
         </div>
-        <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+        <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
           Así se ve tu informe al finalizar
         </h2>
-        <p class="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
+        <p class="text-slate-500 dark:text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
           Ejecutivo, visual y listo para llevar a dirección.
         </p>
       </div>
 
       <!-- Row 1 — imagen izquierda, texto derecha -->
       <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 mb-24 lg:mb-32">
-        <!-- Image -->
         <div class="w-full lg:w-3/5 flex-shrink-0">
-          <div class="rounded-2xl border border-slate-700/60 bg-slate-900 overflow-hidden shadow-2xl shadow-blue-950/20">
-            <div class="flex items-center gap-1.5 px-4 py-2.5 bg-slate-800/80 border-b border-slate-700/50">
+          <div class="preview-frame shadow-blue-100 dark:shadow-blue-950/20">
+            <div class="preview-titlebar">
               <span class="h-2.5 w-2.5 rounded-full bg-red-500/70"></span>
               <span class="h-2.5 w-2.5 rounded-full bg-yellow-500/70"></span>
               <span class="h-2.5 w-2.5 rounded-full bg-green-500/70"></span>
-              <span class="ml-3 text-xs text-slate-500">data-compass-app.web.app</span>
+              <span class="ml-3 text-xs text-slate-400 dark:text-slate-500">data-compass-app.web.app</span>
             </div>
             <img
               src="/screenshots/dashboard-score.png"
@@ -186,13 +158,12 @@ import Layout from '../layouts/Layout.astro';
             />
           </div>
         </div>
-        <!-- Text -->
         <div class="w-full lg:w-2/5">
-          <p class="text-xs font-bold tracking-[0.2em] text-blue-400 uppercase mb-3">01 — Dashboard</p>
-          <h3 class="text-2xl lg:text-3xl font-bold text-white mb-4 leading-snug">
+          <p class="text-xs font-bold tracking-[0.2em] text-blue-600 dark:text-blue-400 uppercase mb-3">01 — Dashboard</p>
+          <h3 class="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-4 leading-snug">
             Tu madurez de datos en una sola pantalla
           </h3>
-          <p class="text-slate-400 leading-relaxed mb-6">
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
             Score global de 0 a 5, nivel CMMI asignado automáticamente y radar chart por dominio. Todo generado en segundos a partir de tus respuestas — sin análisis manual.
           </p>
           <ul class="space-y-3">
@@ -202,12 +173,12 @@ import Layout from '../layouts/Layout.astro';
               ['Nivel automático', 'Clasificación CMMI de Inicial a Optimizado'],
             ].map(([bold, desc]) => (
               <li class="flex items-start gap-3">
-                <div class="mt-0.5 h-5 w-5 rounded-full bg-blue-500/15 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
-                  <svg class="h-3 w-3 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <div class="feature-check-icon bg-blue-500/15 border border-blue-500/30">
+                  <svg class="h-3 w-3 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <path d="M20 6L9 17l-5-5"/>
                   </svg>
                 </div>
-                <span class="text-sm text-slate-400"><span class="text-slate-200 font-medium">{bold}.</span> {desc}</span>
+                <span class="text-sm text-slate-500 dark:text-slate-400"><span class="text-slate-800 dark:text-slate-200 font-medium">{bold}.</span> {desc}</span>
               </li>
             ))}
           </ul>
@@ -216,13 +187,12 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- Row 2 — texto izquierda, imagen derecha -->
       <div class="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16 mb-24 lg:mb-32">
-        <!-- Text -->
         <div class="w-full lg:w-2/5">
-          <p class="text-xs font-bold tracking-[0.2em] text-green-400 uppercase mb-3">02 — Roadmap</p>
-          <h3 class="text-2xl lg:text-3xl font-bold text-white mb-4 leading-snug">
+          <p class="text-xs font-bold tracking-[0.2em] text-green-600 dark:text-green-400 uppercase mb-3">02 — Roadmap</p>
+          <h3 class="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-4 leading-snug">
             Sabe exactamente dónde estás y qué viene después
           </h3>
-          <p class="text-slate-400 leading-relaxed mb-6">
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
             Visualización de los 5 niveles del modelo CMMI con tu posición actual destacada, el contexto de lo que significa ese nivel y el próximo horizonte estratégico.
           </p>
           <ul class="space-y-3">
@@ -232,24 +202,23 @@ import Layout from '../layouts/Layout.astro';
               ['Próximo paso', 'Descripción clara de qué implica el siguiente nivel'],
             ].map(([bold, desc]) => (
               <li class="flex items-start gap-3">
-                <div class="mt-0.5 h-5 w-5 rounded-full bg-green-500/15 border border-green-500/30 flex items-center justify-center flex-shrink-0">
-                  <svg class="h-3 w-3 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <div class="feature-check-icon bg-green-500/15 border border-green-500/30">
+                  <svg class="h-3 w-3 text-green-600 dark:text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <path d="M20 6L9 17l-5-5"/>
                   </svg>
                 </div>
-                <span class="text-sm text-slate-400"><span class="text-slate-200 font-medium">{bold}.</span> {desc}</span>
+                <span class="text-sm text-slate-500 dark:text-slate-400"><span class="text-slate-800 dark:text-slate-200 font-medium">{bold}.</span> {desc}</span>
               </li>
             ))}
           </ul>
         </div>
-        <!-- Image -->
         <div class="w-full lg:w-3/5 flex-shrink-0">
-          <div class="rounded-2xl border border-slate-700/60 bg-slate-900 overflow-hidden shadow-2xl shadow-green-950/10">
-            <div class="flex items-center gap-1.5 px-4 py-2.5 bg-slate-800/80 border-b border-slate-700/50">
+          <div class="preview-frame shadow-green-100 dark:shadow-green-950/10">
+            <div class="preview-titlebar">
               <span class="h-2.5 w-2.5 rounded-full bg-red-500/70"></span>
               <span class="h-2.5 w-2.5 rounded-full bg-yellow-500/70"></span>
               <span class="h-2.5 w-2.5 rounded-full bg-green-500/70"></span>
-              <span class="ml-3 text-xs text-slate-500">data-compass-app.web.app</span>
+              <span class="ml-3 text-xs text-slate-400 dark:text-slate-500">data-compass-app.web.app</span>
             </div>
             <img
               src="/screenshots/cmmi-roadmap.png"
@@ -263,14 +232,13 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- Row 3 — imagen izquierda, texto derecha -->
       <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-        <!-- Image -->
         <div class="w-full lg:w-3/5 flex-shrink-0">
-          <div class="rounded-2xl border border-slate-700/60 bg-slate-900 overflow-hidden shadow-2xl shadow-cyan-950/10">
-            <div class="flex items-center gap-1.5 px-4 py-2.5 bg-slate-800/80 border-b border-slate-700/50">
+          <div class="preview-frame shadow-cyan-100 dark:shadow-cyan-950/10">
+            <div class="preview-titlebar">
               <span class="h-2.5 w-2.5 rounded-full bg-red-500/70"></span>
               <span class="h-2.5 w-2.5 rounded-full bg-yellow-500/70"></span>
               <span class="h-2.5 w-2.5 rounded-full bg-green-500/70"></span>
-              <span class="ml-3 text-xs text-slate-500">data-compass-app.web.app</span>
+              <span class="ml-3 text-xs text-slate-400 dark:text-slate-500">data-compass-app.web.app</span>
             </div>
             <img
               src="/screenshots/executive-summary.png"
@@ -280,13 +248,12 @@ import Layout from '../layouts/Layout.astro';
             />
           </div>
         </div>
-        <!-- Text -->
         <div class="w-full lg:w-2/5">
-          <p class="text-xs font-bold tracking-[0.2em] text-cyan-400 uppercase mb-3">03 — Resumen ejecutivo</p>
-          <h3 class="text-2xl lg:text-3xl font-bold text-white mb-4 leading-snug">
+          <p class="text-xs font-bold tracking-[0.2em] text-cyan-600 dark:text-cyan-400 uppercase mb-3">03 — Resumen ejecutivo</p>
+          <h3 class="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-4 leading-snug">
             Diagnóstico accionable, no solo métricas
           </h3>
-          <p class="text-slate-400 leading-relaxed mb-6">
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
             Fortalezas, brechas críticas y recomendación estratégica personalizada. Listo para presentar a dirección sin necesitar un consultor que lo traduzca.
           </p>
           <ul class="space-y-3">
@@ -296,21 +263,17 @@ import Layout from '../layouts/Layout.astro';
               ['Recomendación estratégica', 'Próximo paso priorizado según el perfil de madurez'],
             ].map(([bold, desc]) => (
               <li class="flex items-start gap-3">
-                <div class="mt-0.5 h-5 w-5 rounded-full bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0">
-                  <svg class="h-3 w-3 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <div class="feature-check-icon bg-cyan-500/15 border border-cyan-500/30">
+                  <svg class="h-3 w-3 text-cyan-600 dark:text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <path d="M20 6L9 17l-5-5"/>
                   </svg>
                 </div>
-                <span class="text-sm text-slate-400"><span class="text-slate-200 font-medium">{bold}.</span> {desc}</span>
+                <span class="text-sm text-slate-500 dark:text-slate-400"><span class="text-slate-800 dark:text-slate-200 font-medium">{bold}.</span> {desc}</span>
               </li>
             ))}
           </ul>
-          <!-- CTA inline -->
           <div class="mt-8">
-            <a
-              href="/evaluacion"
-              class="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-6 py-3 text-sm font-semibold text-white transition-all shadow-lg shadow-blue-900/30"
-            >
+            <a href="/evaluacion" class="btn-cta">
               Obtener mi diagnóstico gratis
               <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -326,64 +289,60 @@ import Layout from '../layouts/Layout.astro';
   <!-- ═══════════════════════════════════════════════
        PROBLEMA
   ════════════════════════════════════════════════ -->
-  <section class="py-24 bg-slate-950">
+  <section class="py-24 bg-white dark:bg-slate-950">
     <div class="max-w-7xl mx-auto px-6">
       <div class="text-center mb-16">
-        <div class="inline-block rounded-full bg-amber-500/10 border border-amber-500/30 px-4 py-1.5 text-sm font-medium text-amber-400 mb-6">
+        <div class="inline-block rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-300 dark:border-amber-500/30 px-4 py-1.5 text-sm font-medium text-amber-700 dark:text-amber-400 mb-6">
           El problema
         </div>
-        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+        <h2 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
           ¿Sabes realmente cómo gestiona<br class="hidden md:block">
           tu organización sus datos?
         </h2>
-        <p class="text-lg text-slate-400 leading-relaxed max-w-3xl mx-auto">
+        <p class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-3xl mx-auto">
           La mayoría de las organizaciones creen tener el control de sus datos, pero sin un
           diagnóstico estructurado es imposible identificar los riesgos ocultos, los silos
           de información y las brechas de madurez que frenan la toma de decisiones basada en datos.
         </p>
       </div>
 
-      <!-- Pain point cards -->
       <div class="grid md:grid-cols-3 gap-6">
-        <!-- Card 1 -->
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-8">
-          <div class="h-12 w-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6" aria-hidden="true">
-            <svg class="h-6 w-6 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <div class="pain-card">
+          <div class="pain-card__icon bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20" aria-hidden="true">
+            <svg class="h-6 w-6 text-amber-600 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
               <line x1="12" y1="8" x2="12" y2="12"/>
               <line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/>
             </svg>
           </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Sin visibilidad</h3>
-          <p class="text-slate-400 leading-relaxed text-sm">
+          <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">Sin visibilidad</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed text-sm">
             No sabes qué datos tienes, dónde están, ni quién es el responsable de ellos.
             Los activos de datos permanecen invisibles e incontrolados.
           </p>
         </div>
-        <!-- Card 2 -->
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-8">
-          <div class="h-12 w-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6" aria-hidden="true">
-            <svg class="h-6 w-6 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <div class="pain-card">
+          <div class="pain-card__icon bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20" aria-hidden="true">
+            <svg class="h-6 w-6 text-red-600 dark:text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
               <line x1="12" y1="9" x2="12" y2="13"/>
               <line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2"/>
             </svg>
           </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Decisiones sin datos</h3>
-          <p class="text-slate-400 leading-relaxed text-sm">
+          <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">Decisiones sin datos</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed text-sm">
             Los equipos operan con intuición en lugar de información fiable y gobernada.
             La calidad del dato nunca está garantizada.
           </p>
         </div>
-        <!-- Card 3 -->
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-8">
-          <div class="h-12 w-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6" aria-hidden="true">
-            <svg class="h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <div class="pain-card">
+          <div class="pain-card__icon bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20" aria-hidden="true">
+            <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z"/>
             </svg>
           </div>
-          <h3 class="text-lg font-semibold text-white mb-3">Riesgos regulatorios</h3>
-          <p class="text-slate-400 leading-relaxed text-sm">
+          <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">Riesgos regulatorios</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed text-sm">
             La falta de control sobre datos sensibles expone a la organización a multas,
             auditorías y pérdida reputacional frente a clientes y reguladores.
           </p>
@@ -392,86 +351,80 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-
   <!-- ═══════════════════════════════════════════════
        DOMINIOS CMMI
   ════════════════════════════════════════════════ -->
-  <section id="dominios" class="py-24 bg-slate-900">
+  <section id="dominios" class="py-24 bg-slate-50 dark:bg-slate-900">
     <div class="max-w-7xl mx-auto px-6">
       <div class="text-center mb-16">
-        <div class="inline-block rounded-full bg-blue-500/10 border border-blue-500/30 px-4 py-1.5 text-sm font-medium text-blue-300 mb-4">
+        <div class="inline-block rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 px-4 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-300 mb-4">
           Cobertura
         </div>
-        <h2 class="text-4xl font-bold text-white mb-4">
+        <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-4">
           Los 5 dominios del modelo CMMI evaluados
         </h2>
-        <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+        <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
           Cobertura completa de las dimensiones que determinan la madurez real
           de tu organización en gobernanza de datos.
         </p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <!-- Gobierno de Datos -->
-        <div class="rounded-xl border border-slate-700 bg-slate-800/60 p-6 text-center hover:border-blue-500/50 hover:bg-slate-800 transition-all duration-200 group">
-          <div class="h-12 w-12 rounded-xl bg-blue-500/10 border border-blue-500/20 group-hover:border-blue-500/40 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
-            <svg class="h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <div class="domain-card">
+          <div class="domain-card__icon">
+            <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z"/>
             </svg>
           </div>
-          <h3 class="text-sm font-semibold text-white mb-2">Gobierno de Datos</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">Políticas, roles, responsabilidades y marcos de decisión.</p>
+          <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">Gobierno de Datos</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-500 leading-relaxed">Políticas, roles, responsabilidades y marcos de decisión.</p>
         </div>
 
-        <!-- Calidad de Datos -->
-        <div class="rounded-xl border border-slate-700 bg-slate-800/60 p-6 text-center hover:border-blue-500/50 hover:bg-slate-800 transition-all duration-200 group">
-          <div class="h-12 w-12 rounded-xl bg-blue-500/10 border border-blue-500/20 group-hover:border-blue-500/40 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
-            <svg class="h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <div class="domain-card">
+          <div class="domain-card__icon">
+            <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
               <polyline points="22 4 12 14.01 9 11.01"/>
             </svg>
           </div>
-          <h3 class="text-sm font-semibold text-white mb-2">Calidad de Datos</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">Estándares y controles de precisión, completitud y consistencia.</p>
+          <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">Calidad de Datos</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-500 leading-relaxed">Estándares y controles de precisión, completitud y consistencia.</p>
         </div>
 
-        <!-- Arquitectura de Datos -->
-        <div class="rounded-xl border border-slate-700 bg-slate-800/60 p-6 text-center hover:border-blue-500/50 hover:bg-slate-800 transition-all duration-200 group">
-          <div class="h-12 w-12 rounded-xl bg-blue-500/10 border border-blue-500/20 group-hover:border-blue-500/40 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
-            <svg class="h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <div class="domain-card">
+          <div class="domain-card__icon">
+            <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <ellipse cx="12" cy="5" rx="9" ry="3"/>
               <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
               <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
             </svg>
           </div>
-          <h3 class="text-sm font-semibold text-white mb-2">Arquitectura de Datos</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">Modelos, integración e infraestructura de datos.</p>
+          <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">Arquitectura de Datos</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-500 leading-relaxed">Modelos, integración e infraestructura de datos.</p>
         </div>
 
-        <!-- Gestión de Metadatos -->
-        <div class="rounded-xl border border-slate-700 bg-slate-800/60 p-6 text-center hover:border-blue-500/50 hover:bg-slate-800 transition-all duration-200 group">
-          <div class="h-12 w-12 rounded-xl bg-blue-500/10 border border-blue-500/20 group-hover:border-blue-500/40 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
-            <svg class="h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <div class="domain-card">
+          <div class="domain-card__icon">
+            <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
               <line x1="7" y1="7" x2="7.01" y2="7" stroke-width="2"/>
             </svg>
           </div>
-          <h3 class="text-sm font-semibold text-white mb-2">Gestión de Metadatos</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">Catalogación, linaje y glosario de negocio.</p>
+          <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">Gestión de Metadatos</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-500 leading-relaxed">Catalogación, linaje y glosario de negocio.</p>
         </div>
 
-        <!-- Cultura & Personas -->
-        <div class="rounded-xl border border-slate-700 bg-slate-800/60 p-6 text-center hover:border-blue-500/50 hover:bg-slate-800 transition-all duration-200 group">
-          <div class="h-12 w-12 rounded-xl bg-blue-500/10 border border-blue-500/20 group-hover:border-blue-500/40 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
-            <svg class="h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <div class="domain-card">
+          <div class="domain-card__icon">
+            <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
               <circle cx="9" cy="7" r="4"/>
               <path d="M23 21v-2a4 4 0 00-3-3.87"/>
               <path d="M16 3.13a4 4 0 010 7.75"/>
             </svg>
           </div>
-          <h3 class="text-sm font-semibold text-white mb-2">Cultura &amp; Personas</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">Alfabetización, adopción y cambio cultural data-driven.</p>
+          <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">Cultura &amp; Personas</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-500 leading-relaxed">Alfabetización, adopción y cambio cultural data-driven.</p>
         </div>
       </div>
     </div>
@@ -480,20 +433,19 @@ import Layout from '../layouts/Layout.astro';
   <!-- ═══════════════════════════════════════════════
        CTA FINAL
   ════════════════════════════════════════════════ -->
-  <section class="py-28 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-    <!-- Decorative blurs -->
-    <div class="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-blue-600/10 blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-cyan-600/10 blur-3xl pointer-events-none"></div>
+  <section class="py-28 bg-gradient-to-br from-slate-100 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">
+    <div class="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-blue-400/10 dark:bg-blue-600/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-cyan-400/10 dark:bg-cyan-600/10 blur-3xl pointer-events-none"></div>
 
     <div class="relative z-10 max-w-3xl mx-auto text-center px-6">
-      <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+      <h2 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
         Tu hoja de ruta hacia la<br>
-        <span class="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+        <span class="bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 bg-clip-text text-transparent">
           excelencia en datos
         </span>
         empieza hoy
       </h2>
-      <p class="text-lg text-slate-300 mb-10 leading-relaxed">
+      <p class="text-lg text-slate-600 dark:text-slate-300 mb-10 leading-relaxed">
         Únete a las organizaciones que ya conocen su nivel CMMI y tienen un plan claro
         para mejorar su gobernanza de datos. Gratuito, en menos de 10 minutos.
       </p>
@@ -501,7 +453,7 @@ import Layout from '../layouts/Layout.astro';
          class="inline-flex justify-center rounded-md bg-blue-600 px-10 py-4 text-base font-semibold text-white shadow-xl hover:bg-blue-700 transition-colors">
         Iniciar Evaluación Gratuita &rarr;
       </a>
-      <p class="mt-6 text-sm text-slate-500">
+      <p class="mt-6 text-sm text-slate-400 dark:text-slate-500">
         Sin tarjeta de crédito &middot; Solo correo corporativo &middot; Resultados inmediatos
       </p>
     </div>
@@ -510,161 +462,29 @@ import Layout from '../layouts/Layout.astro';
   <!-- ═══════════════════════════════════════════════
        FOOTER
   ════════════════════════════════════════════════ -->
-  <footer class="bg-slate-950 border-t border-slate-800 py-12">
+  <footer class="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-12">
     <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-2">
-        <svg class="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="h-5 w-5 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="9"/>
           <line x1="12" y1="3" x2="12" y2="21"/>
           <line x1="3" y1="12" x2="21" y2="12"/>
           <polyline points="16.5 7.5 12 12 7.5 16.5" stroke-width="2"/>
         </svg>
-        <span class="text-white font-bold text-sm">Data<span class="text-blue-400">Compass</span></span>
+        <span class="text-slate-900 dark:text-white font-bold text-sm">Data<span class="text-blue-600 dark:text-blue-400">Compass</span></span>
       </div>
-      <p class="text-sm text-slate-500 text-center">
+      <p class="text-sm text-slate-400 dark:text-slate-500 text-center">
         &copy; 2024 DataCompass. Herramienta de evaluación CMMI para gobernanza de datos.
       </p>
       <div class="flex items-center gap-6">
-        <a href="/evaluacion" class="text-sm text-slate-400 hover:text-white transition-colors">Evaluación</a>
-        <a href="#dominios"   class="text-sm text-slate-400 hover:text-white transition-colors">Dominios</a>
+        <a href="/evaluacion" class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">Evaluación</a>
+        <a href="#dominios"   class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">Dominios</a>
       </div>
     </div>
   </footer>
 
 </Layout>
 
-<!-- ═══════════════════════════════════════════════
-     SCRIPTS
-════════════════════════════════════════════════ -->
 <script>
-  // --- Navbar scroll effect ---
-  const navbar = document.getElementById('navbar');
-  if (navbar) {
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 20);
-    }, { passive: true });
-  }
-
-  // --- Scroll hint fade-out ---
-  const hint = document.getElementById('scroll-hint');
-  if (hint) {
-    window.addEventListener('scroll', () => {
-      hint.classList.toggle('hidden-hint', window.scrollY > 80);
-    }, { passive: true });
-  }
-
-  // --- 3D Dot Canvas Animation ---
-  (function () {
-    const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement | null;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const NUM_DOTS     = 260;
-    const FOV          = 400;
-    const SPEED        = 0.35;
-    const Z_FAR        = 900;
-    const Z_NEAR       = 60;
-    const CONNECT_DIST = 140;       // screen-space px threshold
-    const MAX_LINKS    = 4;
-
-    interface Dot { x: number; y: number; z: number; sx: number; sy: number; r: number; alpha: number; }
-
-    const dots: Dot[] = [];
-
-    function rnd(a: number, b: number) { return Math.random() * (b - a) + a; }
-
-    function scatter(d: Dot) {
-      d.x = rnd(-canvas.width * 1.5, canvas.width * 1.5);
-      d.y = rnd(-canvas.height * 1.5, canvas.height * 1.5);
-      d.z = rnd(Z_NEAR + 60, Z_FAR);
-    }
-
-    function init() {
-      dots.length = 0;
-      for (let i = 0; i < NUM_DOTS; i++) {
-        const d: Dot = { x: 0, y: 0, z: 0, sx: 0, sy: 0, r: 0, alpha: 0 };
-        scatter(d);
-        d.z = rnd(Z_NEAR, Z_FAR); // stagger initial depth
-        dots.push(d);
-      }
-    }
-
-    function resize() {
-      canvas.width  = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    }
-
-    function project(d: Dot) {
-      const scale = FOV / (d.z + FOV);
-      d.sx    = d.x * scale + canvas.width  / 2;
-      d.sy    = d.y * scale + canvas.height / 2;
-      d.r     = Math.max(0.5, 2.8 * scale);
-      d.alpha = Math.min(1, scale * 1.3);
-    }
-
-    function dotColor(d: Dot): string {
-      const t = 1 - d.z / Z_FAR;                  // 0 = far, 1 = near
-      const r = Math.round(71  + (96  - 71)  * t); // slate-600 → blue-400
-      const g = Math.round(85  + (165 - 85)  * t);
-      const b = Math.round(105 + (250 - 105) * t);
-      return `rgba(${r},${g},${b},${d.alpha})`;
-    }
-
-    let raf = 0;
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (const d of dots) {
-        d.z -= SPEED;
-        if (d.z < Z_NEAR) scatter(d);
-        project(d);
-      }
-
-      // Lines
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i < dots.length; i++) {
-        let links = 0;
-        for (let j = i + 1; j < dots.length; j++) {
-          if (links >= MAX_LINKS) break;
-          const dx = dots[i].sx - dots[j].sx;
-          const dy = dots[i].sy - dots[j].sy;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < CONNECT_DIST) {
-            const opacity = (1 - dist / CONNECT_DIST) * 0.18 * Math.min(dots[i].alpha, dots[j].alpha);
-            ctx.strokeStyle = `rgba(96,165,250,${opacity})`;
-            ctx.beginPath();
-            ctx.moveTo(dots[i].sx, dots[i].sy);
-            ctx.lineTo(dots[j].sx, dots[j].sy);
-            ctx.stroke();
-            links++;
-          }
-        }
-      }
-
-      // Dots
-      for (const d of dots) {
-        ctx.beginPath();
-        ctx.arc(d.sx, d.sy, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = dotColor(d);
-        ctx.fill();
-      }
-
-      raf = requestAnimationFrame(animate);
-    }
-
-    const ro = new ResizeObserver(() => { resize(); init(); });
-    ro.observe(canvas);
-    resize();
-    init();
-    animate();
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-      } else {
-        animate();
-      }
-    });
-  })();
+  import '../scripts/hero-canvas';
 </script>
