@@ -10,7 +10,7 @@ interface Props {
 const {
   title,
   description = 'Evalúa la madurez de tu gobernanza de datos con DataCompass. Modelo CMMI, diagnóstico ejecutivo y hoja de ruta estratégica.',
-  image = '/screenshots/cmmi-roadmap.png',
+  image = '/prev_page.png',
   canonicalURL = new URL(Astro.url.pathname, Astro.site),
   keywords = 'diagnóstico madurez datos, evaluación CMMI datos, data governance assessment, gobernanza de datos, madurez de datos empresas, CMMI data management, diagnóstico gobierno de datos, calidad de datos evaluación, data maturity model, informe ejecutivo datos, data strategy assessment gratuito, evaluación datos LATAM'
 } = Astro.props;
@@ -38,6 +38,11 @@ const fullCanonicalURL = new URL(canonicalURL.pathname, siteURL);
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={fullImageURL} />
+<meta property="og:image:secure_url" content={fullImageURL} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
 <meta property="og:locale" content="es_ES" />
 <meta property="og:site_name" content="DataCompass" />
 
@@ -47,6 +52,7 @@ const fullCanonicalURL = new URL(canonicalURL.pathname, siteURL);
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={fullImageURL} />
+<meta name="twitter:image:alt" content={title} />
 
 <!-- LinkedIn specific -->
 <meta property="linkedin:owner" content="DataCompass" />
@@ -59,7 +65,7 @@ const fullCanonicalURL = new URL(canonicalURL.pathname, siteURL);
   "name": "DataCompass",
   "description": "Herramienta gratuita de diagnóstico de madurez de datos basada en el modelo CMMI. Evalúa Gobierno, Calidad, Arquitectura, Metadatos y Cultura de Datos en 10 minutos. Informe ejecutivo y recomendación estratégica.",
   "url": "https://data-compass-app.web.app",
-  "image": "https://data-compass-app.web.app/screenshots/cmmi-roadmap.png",
+  "image": "https://data-compass-app.web.app/prev_page.png",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web-based",
   "offers": {
@@ -83,7 +89,7 @@ const fullCanonicalURL = new URL(canonicalURL.pathname, siteURL);
     "Recomendación estratégica personalizada",
     "Descarga de informe en PDF sin registro previo"
   ],
-  "screenshot": "https://data-compass-app.web.app/screenshots/cmmi-roadmap.png",
+  "screenshot": "https://data-compass-app.web.app/prev_page.png",
   "releaseNotes": "Versión 1.0 con evaluación completa"
 }
 </script>
